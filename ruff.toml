@@ -1,0 +1,63 @@
+# ruff 官方文档：https://docs.astral.sh/ruff/
+# ruff 所有规则：https://docs.astral.sh/ruff/rules/
+# ruff 所有配置：https://docs.astral.sh/ruff/settings/
+# ruff GitHub：https://github.com/astral-sh/ruff
+
+# 如果选择使用 ruff 工具，那么你需要花一定的时间来了解它，适配它，这样它才会成为一个友好的工具，
+# 以下规则都不是定死的，如果有些规则在使用中使你很不舒服，那么我建议你将它添加到 ignore 中，这样就可以将它忽略掉
+
+# ruff 命令行工具参数详解：官方文档：https://docs.astral.sh/ruff/configuration/#full-command-line-interface
+#     check - 在指定的文件或目录上运行 Ruff 进行检查（默认命令）。这是主要命令，用于分析代码，查找潜在的错误或代码风格问题。
+#     rule - 解释一个或所有规则。这个命令可以用来获取特定规则的详细信息或者展示所有可用规则的列表及其说明。
+#     config - 列出或描述可用的配置选项。通过这个命令，用户可以查看或调整 ruff 的配置设置。
+#     linter - 列出所有支持的上游 linter（代码检查工具）。这个命令有助于了解 ruff 集成了哪些其他的代码检查工具。
+#     clean - 清除当前目录及其所有子目录中的任何缓存。这通常在解决性能问题或缓存相关的错误时使用。
+#     format - 在给定的文件或目录上运行 Ruff 格式化器。这个命令用于自动调整代码格式，以符合一定的编码标准。
+#     server - 运行语言服务器。这通常用于在编辑器或 IDE 中实时提供代码分析和自动完成建议。
+#     version - 显示 Ruff 的版本。通过这个命令可以检查正在使用的 Ruff 版本。
+#     help - 打印此消息或给定子命令的帮助信息。如果你需要了解更多关于任何特定命令的信息，这个命令可以提供帮助。
+
+# 预览模式：官方文档：https://docs.astral.sh/ruff/preview/
+# 1. 开启预览模式会启用了一系列不稳定的功能，例如新的lint规则和修复、格式化器样式更改、界面更新等
+# 2. 在使用预览模式时，有关已弃用功能的警告可能会变成错误
+
+line-length = 120  # 允许行长度最长为 120
+exclude = [".venv", "alembic", "docs", "kinit_fast_task/utils/love.py", "example"]  # 要从格式设置和 linting 中排除的文件列表
+indent-width = 4  # 每个缩进级别的空格数
+unsafe-fixes = false  # 不允许执行不安全的修复操作
+cache-dir = ".ruff_cache"  # 指定 Ruff 的缓存目录为 .ruff_cache, Ruff 在执行 lint 或 format 等操作时可能会生成一些缓存文件，以提高后续运行时的效率
+target-version = "py310"  # 指定 Ruff 的目标 Python 版本为 3.10, 这个配置项告诉 Ruff 应该按照 Python 3.10 的语法规范来检查和格式化代码
+fix = false  # 不启用自动修复功能
+
+[lint.per-file-ignores]
+# 忽略所有 `__init__.py` 文件中的 `F401`
+"__init__.py" = ["F401"]
+
+[lint]  # 代码检查与代码修复规则，代码书写不规范的检查与修复
+select = [  # 选择特定的错误类型进行检查
+    "E",  # pycodestyle
+    "F",  # Pyflakes
+    "UP",  # pyupgrade
+    "B",  # flake8-bugbear
+#    "SIM",  # flake8-simplify，简洁语法，觉得这个是非必须的规则
+    "I",  # isort
+    "FA",  # flake8-future-annotations
+]
+preview = true  # 启用预览模式，即会使用最新的规则，以及去掉标记弃用规则
+ignore = ["I001", "E203", "B008", "F821", "B904"]  # 指定完全忽略的错误代码列表
+fixable = ["ALL"]  # 允许自动修复所有可修复的规则
+unfixable = []  # 列出不可自动修复的规则
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"  # 定义哪些变量名被视为占位符或“哑”变量，通常以一个或多个下划线开头
+
+
+# 代码格式化命令： 使用 black 的过程：
+# 指定目录进行格式化：ruff format you_dir_name
+# 检查有哪些文件需要格式化： ruff format --check
+# 检查格式化的代码差异： ruff format --check --diff
+# black future style：https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html
+[format]  # 代码格式化，代码格式不规范的修复
+preview = true  # 启用预览模式, 使用 black future style，
+quote-style = "double"  # 使用双引号来包围字符串
+indent-style = "space"  # 使用空格进行缩进
+skip-magic-trailing-comma = false  # 不跳过魔术尾随逗号，即保留在多行结构末尾自动添加的逗号
+line-ending = "auto"  # 自动检测并使用合适的行结束符

@@ -1,0 +1,46 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+# 安装步骤：只有安装了才会启用，没有安装不会有效果
+# 1. poetry add pre-commit --dev
+# 2. pre-commit install
+
+# 不使用则可以卸载：
+# pre-commit uninstall
+
+# pre-commit 命令：
+# autoupdate：自动更新 pre-commit 配置到最新仓库版本。
+# clean：清理 pre-commit 文件。
+# gc：清理未使用的缓存仓库。
+# init-templatedir：在一个目录中安装 hook 脚本，该目录用于与 git config init.templateDir 结合使用。
+# install：安装 pre-commit 脚本。
+# install-hooks：为配置文件中的所有环境安装 hook 环境。您可能会发现 pre-commit install --install-hooks 更有用。
+# migrate-config：将列表配置迁移到新的映射配置。
+# run：运行 hooks。
+# sample-config：生成一个示例的 .pre-commit-config.yaml 文件。
+# try-repo：尝试一个仓库中的 hooks，对于开发新 hooks 很有用。
+# uninstall：卸载 pre-commit 脚本。
+# validate-config：验证 .pre-commit-config.yaml 文件。
+# validate-manifest：验证 .pre-commit-hooks.yaml 文件。
+# help：显示特定命令的帮助信息。
+default_language_version:
+    python: python3.10
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks  #  pre-commit 的官方钩子集合，包含了多个常用的钩子
+    rev: v4.4.0
+    hooks:
+    -   id: check-added-large-files  # 检查是否添加了大文件
+    -   id: check-toml  # 检查 TOML 文件的语法
+    -   id: check-yaml  # 检查 YAML 文件的语法，并接受额外参数 --unsafe
+        args:
+        -   --unsafe
+    -   id: end-of-file-fixer  # 确保文件以一个空行结束
+    -   id: trailing-whitespace  # 删除行尾的空白字符
+-   repo: https://github.com/charliermarsh/ruff-pre-commit  # ruff 格式化工具的钩子
+    rev: v0.2.0
+    # 在以下操作中，如果修改了文件，那么需要重新 add 文件才可 commit
+    hooks:
+    -   id: ruff  # 运行 ruff 进行代码检查，并接受 --fix 参数自动修复问题
+        args:
+        - --fix
+    -   id: ruff-format  # 专门用于格式化代码
