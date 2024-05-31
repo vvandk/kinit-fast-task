@@ -86,11 +86,18 @@ kinit-fast-task
 
 开发语言：Python 3.10
 
-开发框架：Fastapi 0.111.0
-
-ORM 框架：SQLAlchemy 2.0
-
 开发工具：Pycharm
+
+
+
+**使用技术栈**
+
+- [Python3](https://gitee.com/link?target=https%3A%2F%2Fwww.python.org%2Fdownloads%2Fwindows%2F)：熟悉 python3 基础语法
+- [FastAPI](https://gitee.com/link?target=https%3A%2F%2Ffastapi.tiangolo.com%2Fzh%2F) - 熟悉后台接口 Web 框架
+- [SQLAlchemy 2.0](https://gitee.com/link?target=https%3A%2F%2Fdocs.sqlalchemy.org%2Fen%2F20%2Findex.html) - 数据数据库操作
+- [Pydantic 2](https://docs.pydantic.dev/latest/) - 数据验证库
+- [Typer](https://gitee.com/link?target=https%3A%2F%2Ftyper.tiangolo.com%2F) - 熟悉命令行工具的使用
+- [MySQL](https://gitee.com/link?target=https%3A%2F%2Fwww.mysql.com%2F) 和 [MongoDB](https://gitee.com/link?target=https%3A%2F%2Fwww.mongodb.com%2F) 和 [Redis](https://gitee.com/link?target=https%3A%2F%2Fredis.io%2F) - 熟悉数据存储数据库
 
 ### 数据库依赖情况
 
@@ -124,15 +131,32 @@ MongoDB 的主要功能为：
 
 以上数据库均可在 `.env` 文件中选择开启或者关闭，只是关闭后会无法使用对应功能，但不会影响其他未关联功能
 
+## 源码地址
+
+gitee地址(主推)：https://gitee.com/ktianc/kinit-fast-task
+
+github地址：https://github.com/vvandk/kinit-fast-task
+
+
+
+**KINIT 完整版**
+
+gitee地址(主推)：https://gitee.com/ktianc/kinit
+
+github地址：[https://github.com/vvandk/kinit](https://gitee.com/link?target=https%3A%2F%2Fgithub.com%2Fvvandk%2Fkinit)
+
+## 微信群
+
+目前群聊已经达到 200 人，只能通过邀请进群，不能再直接扫描群二维码进群，需要进群的可以先加我，备注进群，我就拉你进群。
+
+<img src="https://ktianc.oss-cn-beijing.aliyuncs.com/resource/images/20240425/1714006642AjB2ixnH.jpg" alt="logo" style="zoom: 33%;" />
+
 ## 首次使用
 
 ```shell
 # 安装依赖库
 pip3 install poetry -i https://mirrors.aliyun.com/pypi/simple/
 poetry install
-
-# 添加依赖库
-poetry add package
 ```
 
 ### 配置
@@ -234,6 +258,7 @@ ruff format
 
 1. 前置接口地址应提前定义在 `APIRouter` 中
 2. 接口地址的最后一项应该为本接口的实际操作，通常有：`query`, `create`, `update`, `delete`, `upload`
+3. 不再推荐使用路径参数，应该使用查询参数代替
 
 ### 命名规范
 
@@ -265,6 +290,8 @@ ruff format
 - [ ] 通用数据导入导出模块
 
 - [ ] 自动化测试：`pytest`
+
+- [ ] ORM 多数据库支持
 
 
 
