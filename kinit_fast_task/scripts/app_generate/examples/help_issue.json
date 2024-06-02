@@ -1,0 +1,151 @@
+{
+  "app_name": "help_issue",
+  "app_desc": "常见问题",
+  "model": {
+    "filename": "help_issue_model.py",
+    "class_name": "AuthRoleModel",
+    "extend_class_name": [
+      "AuthRoleModel"
+    ],
+    "table_name": "auth_role",
+    "table_args": {
+      "comment": "角色表"
+    },
+    "fields": [
+      {
+        "name": "title",
+        "comment": "标题",
+        "field_type": "str",
+        "nullable": false,
+        "default": null,
+        "max_length": 255
+      },
+      {
+        "name": "content",
+        "comment": "内容",
+        "field_type": "Text",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "view_number",
+        "comment": "查看次数",
+        "field_type": "int",
+        "nullable": false,
+        "default": 0
+      },
+      {
+        "name": "is_active",
+        "comment": "是否可见",
+        "field_type": "bool",
+        "nullable": false,
+        "default": true
+      },
+      {
+        "name": "create_user_id",
+        "comment": "创建人",
+        "field_type": "int",
+        "nullable": false,
+        "default": null
+      }
+    ]
+  },
+  "schema": {
+    "filename": "help_issue_schema.py",
+    "list": [
+      {
+        "class_name": "HelpIssueBaseSchema",
+        "extend_class_name": [
+          "BaseSchema"
+        ],
+        "fields": [
+          {
+            "name": "title",
+            "comment": "标题",
+            "field_type": "str",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "content",
+            "comment": "内容",
+            "field_type": "str",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "view_number",
+            "comment": "查看次数",
+            "field_type": "int",
+            "nullable": false,
+            "default": 0
+          },
+          {
+            "name": "is_active",
+            "comment": "是否可见",
+            "field_type": "bool",
+            "nullable": false,
+            "default": true
+          },
+          {
+            "name": "create_user_id",
+            "comment": "创建人",
+            "field_type": "int",
+            "nullable": false,
+            "default": null
+          }
+        ]
+      },
+      {
+        "class_name": "HelpIssueCreateSchema",
+        "extend_class_name": [
+          "HelpIssueBaseSchema"
+        ],
+        "fields": []
+      },
+      {
+        "class_name": "HelpIssueUpdateSchema",
+        "extend_class_name": [
+          "HelpIssueBaseSchema"
+        ],
+        "fields": []
+      },
+      {
+        "class_name": "HelpIssueSimpleOutSchema",
+        "extend_class_name": [
+          "HelpIssueBaseSchema"
+        ],
+        "fields": [
+          {
+            "name": "id",
+            "comment": "编号",
+            "field_type": "int",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "create_datetime",
+            "comment": "创建时间",
+            "field_type": "DatetimeStr",
+            "nullable": false,
+            "default": null
+          },
+          {
+            "name": "update_datetime",
+            "comment": "更新时间",
+            "field_type": "DatetimeStr",
+            "nullable": false,
+            "default": null
+          }
+        ]
+      }
+    ]
+  },
+  "crud": {
+    "filename": "help_issue_model.py",
+    "class_name": "AuthRoleModel",
+    "extend_class_name": [
+      "AuthRoleModel"
+    ]
+  }
+}
