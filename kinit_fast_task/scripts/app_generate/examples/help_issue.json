@@ -1,4 +1,5 @@
 {
+  "version": "0.1",
   "app_name": "help_issue",
   "app_desc": "常见问题",
   "model": {
@@ -145,7 +146,26 @@
     "filename": "help_issue_model.py",
     "class_name": "AuthRoleModel",
     "extend_class_name": [
-      "AuthRoleModel"
+      "ORMCrud"
+    ],
+    "model_class_name": "AuthRoleModel",
+    "schema_file": "auth_user_schema",
+    "simple_out_schema_class_name": "AuthUserSimpleOutSchema"
+  },
+  "param": {
+    "filename": "params.py",
+    "class_name": "PageParams"
+  },
+  "router": {
+    "prefix_url": "/help/issue",
+    "tags": ["常见问题管理"],
+    "apis": [
+      {
+        "request_method": "post",
+        "request_url": "/create",
+        "response_model": ["ResponseSchema", "str"],
+        "summary": "创建常见问题"
+      }
     ]
   }
 }
