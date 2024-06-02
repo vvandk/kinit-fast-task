@@ -7,7 +7,10 @@ import datetime
 
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from kinit_fast_task.app.models.auth_user_model import AuthUserModel
+from kinit_fast_task.app.models.auth_role_model import AuthRoleModel
 from kinit_fast_task.db.database_factory import DatabaseFactory
 from kinit_fast_task.app.cruds.auth_user_crud import AuthUserCRUD
 from kinit_fast_task.app.schemas import auth_user_schema
@@ -63,7 +66,6 @@ class UserService:
         # 手动开启一个事务，事务在关闭时会自动 commit ，请勿在事务中使用 commit
         # 不关联的两种操作，请开启两个事务进行处理，比如第二个失败，不影响第一个 commit
         async with orm_db.begin():
-
             # 创建一个用户
             new_user = auth_user_schema.AuthUserCreateSchema(
                 name="orm_db_test",
@@ -101,3 +103,61 @@ class UserService:
             print("未获取到指定用户")
         else:
             print("获取用户成功", user)
+
+    async def orm_03_test(self):
+        """
+        ORM 多对多（多对一也可用）关联查询测试
+
+        获取拥有管理员角色的用户:
+            1. 使用快速方式，不加载外键关联数据
+            2. 使用快速方式，并加载外键关联数据
+            3. 使用原生方式，不加载外键关联数据
+            4. 使用原生方式，并加载外键关联数据
+        """
+        # 1. 使用快速方式，不加载外键关联数据
+        # v_join = [["roles"]]  # 指定外键查询字段
+        # v_where = [AuthRoleModel.name == "管理员"]  # 外键查询条件
+        # # limit=0 表示查询出所有数据，否则默认为第一页的10条数据
+        # users = await AuthUserCRUD(session=self.session).get_datas(
+        #     limit=0,
+        #     v_join=v_join,
+        #     v_where=v_where,
+        #     v_return_type="model"
+        # )
+        # for user in users:
+        #     # 无法通过 user.roles 获取用户关联的所有角色数据
+        #     print("用户查询结果：", user.id, user.name)
+
+        # 2. 使用快速方式，并加载外键关联数据
+        v_options = [selectinload(AuthUserModel.roles)]  # 加载外键字段，使其可以通过 . 访问到外键数据
+        v_join = [["roles"]]  # 指定外键查询字段
+        v_where = [AuthRoleModel.name == "管理员"]  # 外键查询条件
+        # limit=0 表示查询出所有数据，否则默认为第一页的10条数据
+        users = await AuthUserCRUD(session=self.session).get_datas(
+            limit=0,
+            v_join=v_join,
+            v_where=v_where,
+            v_options=v_options,
+            v_return_type="model"
+        )
+        for user in users:
+            print("用户查询结果：", user.id, user.name)
+            for role in user.roles:
+                print(f"{user.name} 用户关联角色查询结果：", role.id, role.name)
+
+        # 3. 使用原生方式，不加载外键关联数据
+        # users_sql = select(AuthUserModel).join(AuthUserModel.roles).where(AuthRoleModel.name == "管理员")
+        # users = (await self.session.scalars(users_sql)).all()
+        # for user in users:
+        #     # 无法通过 user.roles 获取用户关联的所有角色数据
+        #     print("用户查询结果：", user.id, user.name)
+
+        # 4. 使用原生方式，并加载外键关联数据
+        # users_sql = select(AuthUserModel).join(AuthUserModel.roles).where(AuthRoleModel.name == "管理员").options(
+        #     selectinload(AuthUserModel.roles)
+        # )
+        # users = (await self.session.scalars(users_sql)).all()
+        # for user in users:
+        #     print("用户查询结果：", user.id, user.name)
+        #     for role in user.roles:
+        #         print(f"{user.name} 用户关联角色查询结果：", role.id, role.name)
