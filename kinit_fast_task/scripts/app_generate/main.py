@@ -19,6 +19,15 @@ class AppGenerate:
         """
         pass
 
+    def model_to_json(self, model_module: str, version: str = "1.0") -> dict:
+        """
+        基于单个 model 输出 JSON 配置文件
+
+        :param model_module: model 模块, 示例：auth_user_model.AuthUserModel
+        :param version: json 版本
+        :return: dict
+        """
+
 
 if __name__ == "__main__":
     generate = AppGenerate()
