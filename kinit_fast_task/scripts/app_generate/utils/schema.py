@@ -2,7 +2,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
-class SchemaField(BaseModel):
+class JSONConfig(BaseModel):
     name: str = Field(..., title="字段名称")
     field_type: str = Field(..., title="字段类型")
     nullable: bool = Field(False, title="是否可以为空")

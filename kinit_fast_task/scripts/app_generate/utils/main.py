@@ -1,5 +1,4 @@
 import importlib
-from pathlib import Path
 from kinit_fast_task.config import settings
 from kinit_fast_task.scripts.app_generate.utils.generate_base import GenerateBase
 from kinit_fast_task.scripts.app_generate.utils.schema_generate import SchemaGenerate
@@ -20,7 +19,7 @@ class AppGenerate:
         3. router: 独立文件，会自动将 model 文件结尾的 model 去除
     """
 
-    SCRIPT_PATH = Path(settings.system.BASE_PATH) / "scripts" / "app_generate"
+    SCRIPT_PATH = settings.BASE_PATH / "scripts" / "app_generate"
 
     def __init__(self, model_file_name: str, *, zh_name: str = None, en_name: str = None):
         """
@@ -80,7 +79,7 @@ class AppGenerate:
         """
         初始化 schemas、API、CRUD 文件的路径
         """
-        base_path = Path(settings.system.BASE_PATH) / "app"
+        base_path = settings.BASE_PATH / "app"
 
         self.schema_file_path = base_path / "schemas" / f"{self.en_name}.py"
         self.crud_file_path = base_path / "cruds" / f"{self.en_name}.py"

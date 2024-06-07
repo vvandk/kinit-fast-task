@@ -32,7 +32,7 @@ if config.config_file_name is not None:
 # ... etc.
 
 # 添加当前项目路径到环境变量
-sys.path.append(settings.system.BASE_PATH)
+sys.path.append(str(settings.BASE_PATH))
 
 # 导入项目中的基本映射类，与 需要迁移的 ORM 模型
 from kinit_fast_task.app.models import *

@@ -3,13 +3,16 @@
 # @File           : config.py
 # @IDE            : PyCharm
 # @Desc           : 项目全局配置信息
-import os
 from collections.abc import Callable
+from pathlib import Path
 
 from fastapi.security import OAuth2PasswordBearer
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
 from pydantic import PostgresDsn, RedisDsn, MongoDsn
 from ipaddress import IPv4Address
+
+# 项目根目录
+_BASE_PATH: Path = Path(__file__).parent
 
 
 class Settings(BaseSettings):
@@ -24,8 +27,15 @@ class Settings(BaseSettings):
     3. dotenv_settings：从 dotenv（.env）文件加载的变量。
     4. settings_cls：BaseSettings 模型的默认字段值。
     """
+    # 单体开发
+    model_config = SettingsConfigDict(
+        env_file=str(_BASE_PATH.parent / '.env'),
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    # 模块开发
+    # model_config = SettingsConfigDict(env_file='.env', env_file_encoding="utf-8", extra="ignore")
 
     @classmethod
     def settings_customise_sources(
@@ -146,13 +156,10 @@ class SystemSettings(Settings):
 
     PROJECT_NAME: str = "kinit_fast_task"
 
-    # 项目根目录
-    BASE_PATH: str = os.path.dirname(os.path.abspath(__file__))
-
     # 挂载临时文件目录，并添加路由访问，此路由不会在接口文档中显示
     # TEMP_DIR：临时文件目录绝对路径
     # 官方文档：https://fastapi.tiangolo.com/tutorial/static-files/
-    TEMP_PATH: str = os.path.join(BASE_PATH, "temp")
+    TEMP_PATH: str = str(_BASE_PATH / "temp")
 
     # 挂载静态目录，并添加路由访问，此路由不会在接口文档中显示
     # STATIC_ENABLE：是否启用静态目录访问
@@ -161,12 +168,12 @@ class SystemSettings(Settings):
     # 官方文档：https://fastapi.tiangolo.com/tutorial/static-files/
     STATIC_ENABLE: bool = True
     STATIC_URL: str = "/media"
-    STATIC_PATH: str = os.path.join(BASE_PATH, "static")
+    STATIC_PATH: str = str(_BASE_PATH / "static")
 
     # 是否将日志打印在控制台
     LOG_CONSOLE_OUT: bool = True
     # 日志目录地址
-    LOG_PATH: str = os.path.join(BASE_PATH, "logs")
+    LOG_PATH: str = str(_BASE_PATH / "logs")
 
     # 跨域解决
     # 详细解释：https://cloud.tencent.com/developer/article/1886114
@@ -224,7 +231,7 @@ class RouterSettings(Settings):
     """  # noqa E501
 
     # 应用路由文件目录
-    APPS_PATH: str = os.path.join(SystemSettings().BASE_PATH, "app", "routers")
+    APPS_PATH: str = str(_BASE_PATH / "app" / "routers")
     # 需要启用的 app router，该顺序也是文档展示顺序
     APPS: list[str]
 
@@ -246,7 +253,7 @@ class GlobalSettings(BaseSettings):
     """
     全局统一配置入口
     """
-
+    BASE_PATH: Path = _BASE_PATH
     # 项目定时任务配置
     task: TaskSettings = TaskSettings()
     # 项目演示环境配置
