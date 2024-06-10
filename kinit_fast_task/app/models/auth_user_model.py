@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from kinit_fast_task.app.models.auth_user_to_role_model import auth_user_to_role_model
 from kinit_fast_task.app.models.base.orm import AbstractORMModel
-from sqlalchemy import String
+from sqlalchemy import String, Text
 
 
 class AuthUserModel(AbstractORMModel):
@@ -23,3 +23,4 @@ class AuthUserModel(AbstractORMModel):
     email: Mapped[str | None] = mapped_column(comment="邮箱")
     is_active: Mapped[bool] = mapped_column(default=True, comment="是否可用")
     age: Mapped[int] = mapped_column(comment="年龄")
+    content: Mapped[str] = mapped_column(Text, comment="年龄")

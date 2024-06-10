@@ -37,9 +37,10 @@ class ModelToJson:
         for column in mapper.columns:
             assert isinstance(column, Column)
             print(column)
+            print(column.__dict__)
             print(type(column))
             print(column.name)
-            print(column.type)
+            print(column.type, column.type.python_type, type(column.type))
             print(column.nullable)
             print(column.default)
             print(column.comment)
