@@ -36,16 +36,18 @@ class AbstractORMModel(AsyncBaseORMModel):
         """
         mapper = inspect(cls)
 
-        # for attr_name, column_property in mapper.column_attrs.items():
-        #     # 假设它是单列属性
-        #     column = column_property.columns[0]
-        #     # 访问各种属性
-        #     print(f"属性: {attr_name}")
-        #     print(f"类型: {column.type}")
-        #     print(f"默认值: {column.default}")
-        #     print(f"服务器默认值: {column.server_default}")
+        # for column in mapper.columns:
+        #     assert isinstance(column, Column)
+        #     print(column)
+        #     print(column.__dict__)
+        #     print(type(column))
+        #     print(column.name)
+        #     print(column.type, column.type.python_type, type(column.type), column.type.__dict__)
+        #     print(column.nullable)
+        #     print(column.default)
+        #     print(column.comment)
 
-        return mapper.column_attrs.keys()
+        return mapper.columns.keys()
 
     @classmethod
     def get_attrs(cls) -> list:
