@@ -7,7 +7,7 @@
 from fastapi import FastAPI
 from kinit_fast_task.db.database_factory import DatabaseFactory
 
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 
 from kinit_fast_task.task.main import scheduled_task
 

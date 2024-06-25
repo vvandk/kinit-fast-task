@@ -2,8 +2,8 @@
 from pathlib import Path
 
 from kinit_fast_task.app.models.base.orm import AbstractORMModel
-from kinit_fast_task.core.logger import log
-from .generate_base import GenerateBase
+from kinit_fast_task.core import log
+from kinit_fast_task.scripts.app_generate.utils.generate_base import GenerateBase
 
 
 class ParamsGenerate(GenerateBase):

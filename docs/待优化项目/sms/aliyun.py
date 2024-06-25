@@ -18,12 +18,12 @@ poetry add alibabacloud_dysmsapi20170525
 
 import random
 import re
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_dysmsapi20170525 import models as dysmsapi_20170525_models
 from alibabacloud_tea_util import models as util_models
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 import datetime
 
 

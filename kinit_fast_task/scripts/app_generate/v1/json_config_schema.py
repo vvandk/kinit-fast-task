@@ -1,6 +1,6 @@
-from typing import Any, Literal
+from typing import Literal
 from pydantic import BaseModel, Field
-from kinit_fast_task.scripts.app_generate.utils.json_config_schema import ModelFieldSchema
+from kinit_fast_task.scripts.app_generate.utils.schema_base import ModelFieldSchema
 
 
 class ModelConfigSchema(BaseModel):

@@ -6,7 +6,7 @@
 
 import requests
 from redis.asyncio import Redis
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 
 
 class WxAccessToken:

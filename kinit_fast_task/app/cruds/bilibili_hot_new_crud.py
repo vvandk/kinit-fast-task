@@ -6,11 +6,11 @@
 from typing import Literal
 
 from kinit_fast_task.app.schemas import scheduler_task_list_schema
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from kinit_fast_task.app.cruds.base.mongo import MongoCrud
 from kinit_fast_task.app.schemas import bilibili_hot_new_schema
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 from kinit_fast_task.task.schema import AddTask, JobExecStrategy
 from kinit_fast_task.task.main import scheduled_task
 from kinit_fast_task.app.cruds.scheduler_task_list_crud import SchedulerTaskListCURD

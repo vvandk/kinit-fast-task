@@ -5,7 +5,7 @@
 # @Desc           : 自动遍历导入所有 models
 from pathlib import Path
 import importlib
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 import ast
 
 

@@ -10,7 +10,7 @@ import zipfile
 from kinit_fast_task.config import settings
 from fastapi import UploadFile
 import sys
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from kinit_fast_task.file.file_base import FileBase
 from aiopathlib import AsyncPath
 import aioshutil

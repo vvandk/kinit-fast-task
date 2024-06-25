@@ -9,7 +9,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 
 
 class EmailSender:

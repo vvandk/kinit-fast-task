@@ -8,9 +8,9 @@ from urllib.parse import urlparse, parse_qs
 from kinit_fast_task.db.async_base import AsyncAbstractDatabase
 from kinit_fast_task.config import settings
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase, AsyncIOMotorClientSession
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from pymongo.errors import ServerSelectionTimeoutError
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 
 
 class MongoDatabase(AsyncAbstractDatabase):

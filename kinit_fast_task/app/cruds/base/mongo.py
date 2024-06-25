@@ -16,7 +16,7 @@ from bson.json_util import dumps
 from fastapi.encoders import jsonable_encoder
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from pymongo.results import InsertOneResult, UpdateResult, InsertManyResult
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from typing import Any
 from pydantic import BaseModel as AbstractSchemaModel
 

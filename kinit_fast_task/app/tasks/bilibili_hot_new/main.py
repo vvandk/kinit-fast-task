@@ -8,7 +8,7 @@ import asyncio
 import httpx
 import orjson
 from kinit_fast_task.app.cruds.bilibili_hot_new import BilibiliHotNewListCURD
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 
 
 class BilibiliHotNew:

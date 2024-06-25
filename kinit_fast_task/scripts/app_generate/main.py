@@ -4,7 +4,8 @@ from typing import Literal
 
 from kinit_fast_task.app.models.base.orm import AbstractORMModel
 from kinit_fast_task.config import settings
-from kinit_fast_task.scripts.app_generate.utils.model_to_json import ModelToJson
+from kinit_fast_task.scripts.app_generate.v1.model_to_json import ModelToJson as ModelToJsonV1
+from kinit_fast_task.scripts.app_generate.v1.generate_code import GenerateCode as GenerateCodeV1
 
 
 class AppGenerate:
@@ -35,6 +36,31 @@ class AppGenerate:
         module = importlib.import_module(f"{settings.system.PROJECT_NAME}.app.models")
         return getattr(module, model_class_name)
 
+    @staticmethod
+    def write_json(filename: str, data: dict) -> None:
+        """
+        写入 json 文件
+
+        :param filename:
+        :param data:
+        :return:
+        """
+        if filename is not None:
+            with open(filename, 'w', encoding='utf-8') as json_file:
+                json.dump(data, json_file, ensure_ascii=False, indent=4)
+
+    @staticmethod
+    def read_json(filename: str) -> dict:
+        """
+        读取 json 文件
+
+        :param filename:
+        :return:
+        """
+        with open(filename, 'r', encoding='utf-8') as json_file:
+            json_config = json.load(json_file)
+            return json_config
+
     def model_to_json(
         self,
         *,
@@ -55,16 +81,13 @@ class AppGenerate:
         :return: dict
         """
         model = self.model_mapping(model_class_name)
-        mtj = ModelToJson(model, app_name, app_desc)
-        try:
-            json_config = getattr(mtj, f"to_json_{version.replace('.', '_')}")()
-        except AttributeError:
-            raise AttributeError(f"不存在的 Version：{version}！")
+        if version == "1.0":
+            mtj = ModelToJsonV1(model, app_name, app_desc)
+        else:
+            raise NotImplementedError(f"version {version} not implemented")
 
-        # 写入 JSON 文件
-        if filename is not None:
-            with open(filename, 'w', encoding='utf-8') as json_file:
-                json.dump(json_config, json_file, ensure_ascii=False, indent=4)
+        json_config = mtj.to_json()
+        self.write_json(filename, json_config)
 
         return json_config
 
@@ -75,12 +98,14 @@ class AppGenerate:
         :param json_config_file: json 配置文件地址
         :return:
         """
-        with open(json_config_file, 'r', encoding='utf-8') as json_file:
-            json_config = json.load(json_file)
+        json_config = self.read_json(json_config_file)
         version = json_config["version"]
         print(json_config)
         if version == "1.0":
-            return True
+            gc = GenerateCodeV1(json_config)
+        else:
+            raise NotImplementedError(f"version {version} not implemented")
+        gc.generate()
 
 
 if __name__ == "__main__":

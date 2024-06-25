@@ -12,7 +12,7 @@ from fastapi import status as fastapi_status
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 
 
 class CustomException(Exception):

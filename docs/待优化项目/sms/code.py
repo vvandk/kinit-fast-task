@@ -7,8 +7,8 @@
 import datetime
 from redis.asyncio import Redis
 from .aliyun import AliyunSMS
-from kinit_fast_task.core.logger import log
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import log
+from kinit_fast_task.core import CustomException
 
 
 class CodeSMS(AliyunSMS):

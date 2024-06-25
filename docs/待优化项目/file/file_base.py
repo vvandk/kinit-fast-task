@@ -9,7 +9,7 @@ import os
 from aiopathlib import AsyncPath
 from fastapi import UploadFile
 from kinit_fast_task.config import settings
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from kinit_fast_task.utils.tools import generate_string
 
 

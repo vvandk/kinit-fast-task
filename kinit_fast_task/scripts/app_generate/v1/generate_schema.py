@@ -9,42 +9,28 @@ from sqlalchemy import inspect as model_inspect
 from pathlib import Path
 
 from kinit_fast_task.app.models.base.orm import AbstractORMModel
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 from kinit_fast_task.scripts.app_generate.utils.schema import SchemaField
 from sqlalchemy.sql.schema import Column as ColumnType
 from kinit_fast_task.scripts.app_generate.utils.generate_base import GenerateBase
+from kinit_fast_task.scripts.app_generate.v1.json_config_schema import JSONConfigSchema
 
 
 class SchemaGenerate(GenerateBase):
     BASE_FIELDS = ["id", "create_datetime", "update_datetime", "delete_datetime", "is_delete"]
 
-    def __init__(
-        self,
-        *,
-        model: type[AbstractORMModel],
-        en_name: str,
-        schema_file_path: Path,
-        base_class_name: str,
-        schema_simple_out_class_name: str,
-        **kwargs,
-    ):
+    def __init__(self, json_config: JSONConfigSchema):
         """
         初始化工作
-        :param model: 提前定义好的 ORM 模型
-        :param schema_file_path:
-        :param en_name: 功能英文名称
-        :param base_class_name: 基础名称
-        :param schema_simple_out_class_name: simple out schema 名称
+
+        :param json_config: 
         """  # noqa E501
-        self.model = model
-        self.base_class_name = base_class_name
-        self.schema_simple_out_class_name = schema_simple_out_class_name
-        self.en_name = en_name
-        self.schema_file_path = schema_file_path
+        self.json_config = json_config
 
     def write_generate_code(self):
         """
         生成 schema 文件，以及代码内容
+
         :return:
         """
         if self.schema_file_path.exists():
@@ -63,24 +49,8 @@ class SchemaGenerate(GenerateBase):
         生成 schema 代码内容
         :return:
         """
-        fields = []
-        mapper = model_inspect(self.model)
-        for attr_name, column_property in mapper.column_attrs.items():
-            if attr_name in self.BASE_FIELDS:
-                continue
-            # 假设它是单列属性
-            column: ColumnType = column_property.columns[0]
-            item = SchemaField(
-                name=attr_name,
-                field_type=column.type.python_type.__name__,
-                nullable=column.nullable,
-                default=column.default.__dict__.get("arg", None) if column.default else None,
-                title=column.comment,
-                max_length=column.type.__dict__.get("length", None),
-            )
-            fields.append(item)
-
-        code = self.generate_file_desc(self.schema_file_path.name, "1.0", "Pydantic 模型，用于数据库序列化操作")
+        schema = self.json_config.schemas
+        code = self.generate_file_desc(schema.filename, "1.0", "Pydantic 模型，用于数据库序列化操作")
 
         modules = {
             "pydantic": ["Field"],

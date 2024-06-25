@@ -13,7 +13,7 @@ from apscheduler.events import JobExecutionEvent
 from kinit_fast_task.task.utils.scheduler_task_record import SchedulerTaskRecordCURD
 from kinit_fast_task.task.utils.scheduler_task_list import SchedulerTaskListCURD
 import pytz
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import log
 from kinit_fast_task.app.cruds.base.mongo import ReturnType
 
 

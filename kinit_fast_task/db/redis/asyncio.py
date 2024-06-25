@@ -8,8 +8,8 @@
 from kinit_fast_task.db.async_base import AsyncAbstractDatabase
 from kinit_fast_task.config import settings
 import redis.asyncio as redis
-from kinit_fast_task.core.exception import CustomException
-from kinit_fast_task.core.logger import log
+from kinit_fast_task.core import CustomException
+from kinit_fast_task.core import log
 
 
 class RedisDatabase(AsyncAbstractDatabase):

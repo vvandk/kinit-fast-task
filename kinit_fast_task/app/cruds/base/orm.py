@@ -12,7 +12,7 @@ from kinit_fast_task.utils.response_code import Status as UtilsStatus
 from sqlalchemy import func, delete, update, BinaryExpression, select, false, insert, Result, CursorResult
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.strategy_options import _AbstractLoad
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from sqlalchemy.sql.selectable import Select as SelectType
 from typing import Any, TypeVar, Generic
 from pydantic import BaseModel as AbstractSchemaModel

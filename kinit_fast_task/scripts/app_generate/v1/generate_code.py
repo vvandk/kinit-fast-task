@@ -4,7 +4,7 @@
 # @IDE            : PyCharm
 # @Desc           : 文件描述信息
 
-from kinit_fast_task.scripts.app_generate.utils.json_config_schema_1_0 import JSONConfigSchema
+from kinit_fast_task.scripts.app_generate.v1.json_config_schema import JSONConfigSchema
 
 
 class GenerateCode:

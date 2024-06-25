@@ -5,7 +5,7 @@
 # @Desc           : 数据导入管理
 
 from fastapi import UploadFile
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import CustomException
 from .excel_manage import ExcelManage
 from kinit_fast_task.file.file_manage import FileManage
 from .write_xlsx import WriteXlsx

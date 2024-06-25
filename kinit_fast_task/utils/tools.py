@@ -10,8 +10,8 @@ import re
 import string
 import importlib
 import subprocess
-from kinit_fast_task.core.logger import log
-from kinit_fast_task.core.exception import CustomException
+from kinit_fast_task.core import log
+from kinit_fast_task.core import CustomException
 
 
 def camel_to_snake(name: str) -> str:
