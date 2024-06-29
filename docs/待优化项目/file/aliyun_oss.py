@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import oss2  # 安装依赖库：poetry add oss2
 from oss2.models import PutObjectResult
 from kinit_fast_task.core import CustomException
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 from kinit_fast_task.file.file_base import FileBase
 
 

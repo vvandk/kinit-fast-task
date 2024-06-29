@@ -12,7 +12,7 @@ Typer 官方文档：https://typer.tiangolo.com/
 
 import typer
 
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 
 
 shell_app = typer.Typer(rich_markup_mode="rich")

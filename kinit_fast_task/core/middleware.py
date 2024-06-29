@@ -17,7 +17,7 @@ import json
 import time
 
 from fastapi import Request
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from user_agents import parse

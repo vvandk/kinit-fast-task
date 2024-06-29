@@ -6,6 +6,7 @@ from kinit_fast_task.app.models.base.orm import AbstractORMModel
 from kinit_fast_task.config import settings
 from kinit_fast_task.scripts.app_generate.v1.model_to_json import ModelToJson as ModelToJsonV1
 from kinit_fast_task.scripts.app_generate.v1.generate_code import GenerateCode as GenerateCodeV1
+from kinit_fast_task.utils import log
 
 
 class AppGenerate:
@@ -20,11 +21,12 @@ class AppGenerate:
     SCRIPT_PATH = settings.BASE_PATH / "scripts" / "app_generate"
     VERSIONS = Literal["1.0"]
 
-    def __init__(self):
+    def __init__(self, verbose: bool = False):
         """
         初始化 AppGenerate 类
         """
-        pass
+        self.verbose = verbose
+        self.task_log = log.create_task(verbose=verbose)
 
     @staticmethod
     def model_mapping(model_class_name: str) -> type[AbstractORMModel]:
@@ -91,25 +93,42 @@ class AppGenerate:
 
         return json_config
 
-    def json_to_code(self, json_config_file: str) -> bool:
+    def json_to_code(self, json_config_file: str, is_write: bool = False) -> bool:
         """
         基于 JSON 配置文件生成代码
 
         :param json_config_file: json 配置文件地址
+        :param is_write: 是否将生成结果直接写入文件
         :return:
         """
+        self.task_log.info("基于 JSON 配置生成代码, 配置文件：", json_config_file, is_verbose=True)
         json_config = self.read_json(json_config_file)
+
         version = json_config["version"]
+        self.task_log.info("基于 JSON 配置生成代码, 版本：", version, is_verbose=True)
+
         if version == "1.0":
-            gc = GenerateCodeV1(json_config)
+            gc = GenerateCodeV1(json_config, task_log=self.task_log)
         else:
             raise NotImplementedError(f"version {version} not implemented")
-        gc.generate()
+
+        if is_write:
+            self.task_log.info("基于 JSON 配置生成代码, 开始生成, 并将生成结果直接写入文件")
+            gc.write_generate()
+        else:
+            self.task_log.info("基于 JSON 配置生成代码, 开始生成, 只输出代码, 不写入文件")
+            gc.generate()
+        self.task_log.success("基于 JSON 配置生成代码, 执行成功", is_verbose=True)
+        if is_write:
+            self.task_log.info("推荐执行代码格式化命令：")
+            self.task_log.info("1. ruff check --fix")
+            self.task_log.info("2. ruff format")
+        self.task_log.end()
         return True
 
 
 if __name__ == "__main__":
-    app = AppGenerate()
+    app = AppGenerate(verbose=True)
 
     # config = app.model_to_json(
     #     model_class_name="AuthTestModel",

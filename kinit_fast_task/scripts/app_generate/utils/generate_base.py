@@ -38,7 +38,7 @@ class GenerateBase:
         :return:
         """
         code = f"# @Version        : {version}"
-        code += f"\n# @Create Time    : {datetime.datetime.now().strftime('%Y/%m/%d %H:%M')}"
+        code += f"\n# @Create Time    : {datetime.datetime.now().strftime('%Y/%m/%d')}"
         code += f"\n# @File           : {filename}"
         code += "\n# @IDE            : PyCharm"
         code += f"\n# @Desc           : {desc}"

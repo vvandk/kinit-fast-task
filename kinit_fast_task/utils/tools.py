@@ -10,7 +10,7 @@ import re
 import string
 import importlib
 import subprocess
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 from kinit_fast_task.core import CustomException
 
 

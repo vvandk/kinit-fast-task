@@ -11,7 +11,7 @@ from kinit_fast_task.core import CustomException
 from kinit_fast_task.db.async_base import AsyncAbstractDatabase
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker, AsyncEngine
 from kinit_fast_task.config import settings
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 
 
 class ORMDatabase(AsyncAbstractDatabase):

@@ -10,7 +10,7 @@ from kinit_fast_task.config import settings
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase, AsyncIOMotorClientSession
 from kinit_fast_task.core import CustomException
 from pymongo.errors import ServerSelectionTimeoutError
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 
 
 class MongoDatabase(AsyncAbstractDatabase):

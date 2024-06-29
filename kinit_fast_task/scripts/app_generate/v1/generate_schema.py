@@ -3,35 +3,36 @@
 # @File           : schema_generate.py
 # @IDE            : PyCharm
 # @desc           : schema 代码生成
-from pathlib import Path
 
-from kinit_fast_task.core import log
 from kinit_fast_task.scripts.app_generate.utils.generate_base import GenerateBase
 from kinit_fast_task.scripts.app_generate.v1.json_config_schema import JSONConfigSchema
 from kinit_fast_task.config import settings
+from kinit_fast_task.utils.logger import TaskLogger
 
 
 class SchemaGenerate(GenerateBase):
     BASE_FIELDS = ["id", "create_datetime", "update_datetime", "delete_datetime", "is_delete"]
 
-    def __init__(self, json_config: JSONConfigSchema):
+    def __init__(self, json_config: JSONConfigSchema, task_log: TaskLogger):
         """
         初始化工作
 
         :param json_config: 
+        :param task_log:
         """
         self.json_config = json_config
         self.file_path = settings.BASE_PATH / "app" / "schemas" / self.json_config.schemas.filename
+        self.project_name = settings.system.PROJECT_NAME
+        self.task_log = task_log
+        self.task_log.info("开始生成 Schema 代码, Schema 文件地址为：", self.file_path, is_verbose=True)
 
     def write_generate_code(self):
         """
         生成 schema 文件，以及代码内容
-
-        :return:
         """
 
         if self.file_path.exists():
-            log.info("Schema 文件已存在，正在删除重新写入")
+            self.task_log.warning("Schema 文件已存在，正在删除重新写入")
             self.file_path.unlink()
 
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -39,26 +40,27 @@ class SchemaGenerate(GenerateBase):
 
         code = self.generate_code()
         self.file_path.write_text(code, "utf-8")
-        log.info("Schema 代码创建完成")
+        self.task_log.success("Schema 代码创建完成")
 
     def generate_code(self) -> str:
         """
         生成 schema 代码内容
-        :return:
         """
         schema = self.json_config.schemas
         code = self.generate_file_desc(self.file_path.name, "1.0", "Pydantic 模型，用于数据库序列化操作")
 
         modules = {
             "pydantic": ["Field"],
-            "kinit_fast_task.core.types": ["DatetimeStr"],
-            "kinit_fast_task.app.schemas.base.base": ["BaseSchema"],
+            f"{self.project_name}.core.types": ["DatetimeStr"],
+            f"{self.project_name}.app.schemas.base": ["BaseSchema"],
         }
         code += self.generate_modules_code(modules)
 
         # 生成字段列表
         schema_field_code = ""
         for item in self.json_config.model.fields:
+            if item.name in self.BASE_FIELDS:
+                continue
             field = f'\n\t{item.name}: {item.field_python_type} {"| None " if item.nullable else ""}'
             default = None
             if item.default is not None:

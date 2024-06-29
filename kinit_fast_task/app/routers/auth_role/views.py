@@ -3,7 +3,6 @@
 # @File           : views.py
 # @IDE            : PyCharm
 # @Desc           : 路由，视图文件
-import asyncio
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, Body, Query

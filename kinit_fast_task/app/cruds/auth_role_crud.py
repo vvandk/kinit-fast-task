@@ -5,7 +5,7 @@
 # @Desc           : 数据操作
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from kinit_fast_task.app.cruds.base.orm import ORMCrud
+from kinit_fast_task.app.cruds.base import ORMCrud
 from kinit_fast_task.app.schemas import auth_role_schema
 from kinit_fast_task.app.models.auth_role_model import AuthRoleModel
 

@@ -15,7 +15,7 @@ aiohttp 异步请求文档：https://docs.aiohttp.org/en/stable/client_quickstar
 """
 
 import aiohttp
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 from pydantic import BaseModel
 
 

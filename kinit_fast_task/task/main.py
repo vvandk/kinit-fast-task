@@ -10,7 +10,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from kinit_fast_task.core import CustomException
 from kinit_fast_task.task.utils.scheduler import Scheduler, scheduler_active
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 from kinit_fast_task.task.schema import JobExecStrategy, AddTask
 from kinit_fast_task.config import settings
 from kinit_fast_task.utils.singleton import Singleton

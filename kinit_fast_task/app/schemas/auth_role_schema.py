@@ -6,7 +6,7 @@
 
 from pydantic import Field
 from kinit_fast_task.core.types import DatetimeStr
-from kinit_fast_task.app.schemas.base.base import BaseSchema
+from kinit_fast_task.app.schemas.base import BaseSchema
 
 
 class AuthRoleBaseSchema(BaseSchema):

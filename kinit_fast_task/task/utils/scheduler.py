@@ -26,7 +26,7 @@ from kinit_fast_task.config import settings
 from kinit_fast_task.app.cruds.base.mongo import ReturnType
 from kinit_fast_task.task.utils.scheduler_task_record import SchedulerTaskRecordCURD
 from kinit_fast_task.task.utils.scheduler_task_list import SchedulerTaskListCURD
-from kinit_fast_task.core import log
+from kinit_fast_task.utils import log
 from kinit_fast_task.core import CustomException
 from functools import wraps
 from typing import Any
