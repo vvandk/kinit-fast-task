@@ -5,6 +5,24 @@ from pathlib import Path
 
 class GenerateBase:
     @staticmethod
+    def create_pag(pag_path: str | Path):
+        """
+        创建包
+
+        :param pag_path:
+        :return:
+        """
+        if isinstance(pag_path, str):
+            pag_path = Path(pag_path)
+
+        # 创建目录，如果不存在
+        pag_path.mkdir(parents=True, exist_ok=True)
+
+        # 在目录中创建 __init__.py 文件
+        init_file = pag_path / "__init__.py"
+        init_file.touch(exist_ok=True)
+
+    @staticmethod
     def camel_to_snake(name: str) -> str:
         """
         将大驼峰命名（CamelCase）转换为下划线命名（snake_case）

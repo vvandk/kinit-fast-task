@@ -73,7 +73,7 @@ class ORMDatabase(AsyncAbstractDatabase):
                 "checked_out": pool.checkedout(),  # 当前使用中的连接数
                 "overflow": pool._overflow,  # 当前溢出的连接数
                 "pool_size": pool.size(),  # 连接池大小
-                "checked_in": pool.size() - pool.checkedout()  # 空闲连接数
+                "checked_in": pool.size() - pool.checkedout(),  # 空闲连接数
             }
             print("\n=======================BEGIN=======================")
             print(f"当前使用中的连接数: {status['checked_out']}")

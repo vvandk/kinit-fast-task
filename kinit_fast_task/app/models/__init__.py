@@ -19,10 +19,7 @@ def find_classes_ending_with_model(file_path: Path) -> list[str]:
         log.error(f"解析 Model 文件失败 {file_path}, 报错内容: {e}")
         return []
 
-    return [
-        node.name for node in ast.walk(tree)
-        if isinstance(node, ast.ClassDef) and node.name.endswith('Model')
-    ]
+    return [node.name for node in ast.walk(tree) if isinstance(node, ast.ClassDef) and node.name.endswith("Model")]
 
 
 def import_models_from_directory(directory: Path, excluded: set) -> None:
@@ -54,4 +51,3 @@ excluded_files = {"__init__.py"}
 
 # 动态加载各目录下的已存在 __init__.py 文件中的 Model
 import_models_from_directory(Path(__file__).parent, excluded_files)
-

@@ -69,4 +69,3 @@ class AuthUserCRUD(ORMCrud[AuthUserModel]):
         if v_return_obj:
             return obj
         return "更新成功"
-

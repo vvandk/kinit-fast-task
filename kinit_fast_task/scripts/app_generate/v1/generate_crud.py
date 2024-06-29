@@ -7,7 +7,6 @@ from kinit_fast_task.utils.logger import TaskLogger
 
 
 class CrudGenerate(GenerateBase):
-
     def __init__(self, json_config: JSONConfigSchema, task_log: TaskLogger):
         """
         初始化工作
@@ -49,8 +48,8 @@ class CrudGenerate(GenerateBase):
         """
         获取基础模块导入配置
         """
-        schema_file_name = Path(self.json_config.schemas.filename).name
-        model_file_name = Path(self.json_config.model.filename).name
+        schema_file_name = Path(self.json_config.schemas.filename).stem
+        model_file_name = Path(self.json_config.model.filename).stem
 
         modules = {
             "sqlalchemy.ext.asyncio": ["AsyncSession"],
@@ -67,9 +66,7 @@ class CrudGenerate(GenerateBase):
         schema_file_name = Path(self.json_config.schemas.filename).stem
         schema_out_class_name = self.json_config.schemas.simple_out_class_name
 
-        base_code = (
-            f"\n\nclass {self.json_config.crud.class_name}(ORMCrud[{self.json_config.model.class_name}]):\n"
-        )
+        base_code = f"\n\nclass {self.json_config.crud.class_name}(ORMCrud[{self.json_config.model.class_name}]):\n"
         base_code += "\n\tdef __init__(self, session: AsyncSession):"
         base_code += "\n\t\tsuper().__init__()"
         base_code += "\n\t\tself.session = session"

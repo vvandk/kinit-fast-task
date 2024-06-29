@@ -13,7 +13,6 @@ from kinit_fast_task.utils.logger import TaskLogger
 
 
 class GenerateCode:
-
     def __init__(self, json_config: dict, task_log: TaskLogger):
         self.json_config = JSONConfigSchema(**json_config)
         self.task_log = task_log
@@ -62,4 +61,3 @@ class GenerateCode:
         views = ViewGenerate(self.json_config, self.task_log)
         views.write_generate_code()
         self.task_log.success("Views 代码写入完成")
-

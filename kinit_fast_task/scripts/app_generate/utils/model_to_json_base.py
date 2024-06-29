@@ -12,7 +12,6 @@ from kinit_fast_task.scripts.app_generate.utils import schema_base
 
 
 class ModelToJsonBase:
-
     def __init__(self, model: type(AbstractORMModel), app_name: str, app_desc: str):
         """
         基于单个 model 输出 JSON 配置文件
@@ -42,9 +41,9 @@ class ModelToJsonBase:
             field_type = type(column.type).__name__
             params = column.type.__dict__
             if field_type == "String":
-                keys = ['length']
+                keys = ["length"]
             elif field_type == "DECIMAL":
-                keys = ['precision', "scale"]
+                keys = ["precision", "scale"]
             else:
                 keys = []
             field_kwargs = {key: params[key] for key in keys}
@@ -55,7 +54,7 @@ class ModelToJsonBase:
                 field_kwargs=field_kwargs,
                 nullable=column.nullable,
                 default=default,
-                comment=column.comment
+                comment=column.comment,
             )
             fields.append(item)
         return fields

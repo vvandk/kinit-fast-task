@@ -13,6 +13,7 @@ kinit_fast_task/static/*
 !kinit_fast_task/static/swagger_ui
 !kinit_fast_task/static/system/favicon.ico
 !kinit_fast_task/static/system/logo.png
+alembic/versions/*
 !alembic/versions/.gitkeep
 
 # dotenv

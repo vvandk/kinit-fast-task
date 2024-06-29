@@ -34,7 +34,7 @@ class UserService:
 
         # 查询近一个月用户新增数据量
         stmt = (
-            select(func.date(AuthUserModel.create_datetime).label('date'), func.count(AuthUserModel.id).label('count'))
+            select(func.date(AuthUserModel.create_datetime).label("date"), func.count(AuthUserModel.id).label("count"))
             .where(AuthUserModel.create_datetime >= one_month_ago)
             .group_by(func.date(AuthUserModel.create_datetime))
         )
@@ -68,11 +68,7 @@ class UserService:
         async with orm_db.begin():
             # 创建一个用户
             new_user = auth_user_schema.AuthUserCreateSchema(
-                name="orm_db_test",
-                telephone="19920240505",
-                is_active=True,
-                age=3,
-                role_ids=[1]
+                name="orm_db_test", telephone="19920240505", is_active=True, age=3, role_ids=[1]
             )
             user = await AuthUserCRUD(orm_db).create_data(new_user, v_return_obj=True)
             print("用户创建成功", user)
@@ -134,11 +130,7 @@ class UserService:
         v_where = [AuthRoleModel.name == "管理员"]  # 外键查询条件
         # limit=0 表示查询出所有数据，否则默认为第一页的10条数据
         users = await AuthUserCRUD(session=self.session).get_datas(
-            limit=0,
-            v_join=v_join,
-            v_where=v_where,
-            v_options=v_options,
-            v_return_type="model"
+            limit=0, v_join=v_join, v_where=v_where, v_options=v_options, v_return_type="model"
         )
         for user in users:
             print("用户查询结果：", user.id, user.name)

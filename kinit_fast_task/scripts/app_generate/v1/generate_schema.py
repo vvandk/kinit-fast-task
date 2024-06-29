@@ -17,7 +17,7 @@ class SchemaGenerate(GenerateBase):
         """
         初始化工作
 
-        :param json_config: 
+        :param json_config:
         :param task_log:
         """
         self.json_config = json_config

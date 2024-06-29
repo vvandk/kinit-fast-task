@@ -128,7 +128,7 @@ class TaskLogger:
             调用堆栈的深度，用于调整日志消息的来源
         """
         self._log("CRITICAL", *args, is_verbose=is_verbose, depth=depth + 1)
-    
+
     def end(self, msg: str = None, depth: int = 0) -> None:
         """
         输出任务结束信息
@@ -142,7 +142,7 @@ class TaskLogger:
         """
         if msg:
             self._log("INFO", msg, depth=depth + 1)
-        self._log("INFO", f"==EOF==\n", depth=depth + 1)
+        self._log("INFO", "==EOF==\n", depth=depth + 1)
 
 
 class LoguruLogger(metaclass=Singleton):
@@ -186,9 +186,9 @@ class LoguruLogger(metaclass=Singleton):
         self._logger.add(
             log_file_path,  # 日志文件路径
             rotation="5 MB",  # 当日志文件达到该大小时，将切换到一个新的日志文件
-            retention='3 days',  # 日志保留期限
+            retention="3 days",  # 日志保留期限
             enqueue=True,  # 设置为True，日志消息会被放入队列中，异步写入文件，这样可以提高程序性能
-            encoding='UTF-8',  # 日志文件的编码格式
+            encoding="UTF-8",  # 日志文件的编码格式
             level="DEBUG",  # 设置日志级别为DEBUG，意味着DEBUG及以上级别的日志会被写入此文件
             mode="a",  # 如果文件已经存在，则追加内容
         )
@@ -308,7 +308,7 @@ class LoguruLogger(metaclass=Singleton):
         :param depth: 调用堆栈的深度，用于调整日志消息的来源
         """
         _task_log = TaskLogger(verbose)
-        _task_log.info(f"=======", depth=depth + 1)
+        _task_log.info("=======", depth=depth + 1)
         _task_log.info(msg, depth=depth + 1)
         return _task_log
 
@@ -318,10 +318,10 @@ log = LoguruLogger()
 log.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     log.debug("main, This is a debug message")
     log.info("main, This is an info message")
-    
+
     task_log = log.create_task(verbose=True)
     task_log.debug("This is a debug message", is_verbose=True)
     task_log.info("This is an info message")

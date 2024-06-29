@@ -48,7 +48,7 @@ class AppGenerate:
         :return:
         """
         if filename is not None:
-            with open(filename, 'w', encoding='utf-8') as json_file:
+            with open(filename, "w", encoding="utf-8") as json_file:
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
 
     @staticmethod
@@ -59,18 +59,12 @@ class AppGenerate:
         :param filename:
         :return:
         """
-        with open(filename, 'r', encoding='utf-8') as json_file:
+        with open(filename, encoding="utf-8") as json_file:
             json_config = json.load(json_file)
             return json_config
 
     def model_to_json(
-        self,
-        *,
-        model_class_name: str,
-        app_name: str,
-        app_desc: str,
-        version: VERSIONS = "1.0",
-        filename: str = None
+        self, *, model_class_name: str, app_name: str, app_desc: str, version: VERSIONS = "1.0", filename: str = None
     ) -> dict:
         """
         基于单个 model 输出 JSON 配置文件
@@ -123,6 +117,10 @@ class AppGenerate:
             self.task_log.info("推荐执行代码格式化命令：")
             self.task_log.info("1. ruff check --fix")
             self.task_log.info("2. ruff format")
+            self.task_log.info("如若使用还需进行以下两步操作：")
+            migrate_command = "python main.py migrate"
+            self.task_log.info(f"1. 请确认 {gc.json_config.model.class_name} 数据表已完成迁移至数据库, 若还没迁移, 可执行：{migrate_command} 迁移命令！")
+            self.task_log.info(f"2. 请确认在 config.py:RouterSettings.APPS 配置中添加 {gc.json_config.app_name} 路由！")
         self.task_log.end()
         return True
 
@@ -130,13 +128,12 @@ class AppGenerate:
 if __name__ == "__main__":
     app = AppGenerate(verbose=True)
 
-    # config = app.model_to_json(
-    #     model_class_name="AuthTestModel",
-    #     app_name="auth_test",
-    #     app_desc="测试",
-    #     filename="test_data.json"
-    # )
-    # print(json.dumps(config, indent=4, ensure_ascii=False))
+    config = app.model_to_json(
+        model_class_name="AuthRoleModel",
+        app_name="auth_role",
+        app_desc="角色",
+        filename="role_data.json"
+    )
+    print(json.dumps(config, indent=4, ensure_ascii=False))
 
-    app.json_to_code("test_data.json")
-
+    # app.json_to_code("role_data.json", is_write=True)

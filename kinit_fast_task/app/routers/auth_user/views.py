@@ -21,8 +21,8 @@ router = APIRouter(prefix="/auth/user", tags=["用户管理"])
 
 @router.post("/create", response_model=ResponseSchema[str], summary="创建用户")
 async def create(
-        data: auth_user_schema.AuthUserCreateSchema,
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
+    data: auth_user_schema.AuthUserCreateSchema,
+    session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
 ):
     """
     示例数据：
@@ -43,17 +43,17 @@ async def create(
 
 @router.put("/update", response_model=ResponseSchema[str], summary="更新用户")
 async def update(
-        data_id: int = Body(..., description="用户编号"),
-        data: auth_user_schema.AuthUserUpdateSchema = Body(..., description="更新内容"),
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
+    data_id: int = Body(..., description="用户编号"),
+    data: auth_user_schema.AuthUserUpdateSchema = Body(..., description="更新内容"),
+    session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
 ):
     return RestfulResponse.success(await AuthUserCRUD(session).update_data(data_id, data))
 
 
 @router.delete("/delete", response_model=ResponseSchema[str], summary="批量删除用户")
 async def delete(
-        data_ids: list[int] = Body(..., description="用户编号列表"),
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
+    data_ids: list[int] = Body(..., description="用户编号列表"),
+    session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
 ):
     await AuthUserCRUD(session).delete_datas(ids=data_ids)
     return RestfulResponse.success("删除成功")
@@ -63,8 +63,8 @@ async def delete(
     "/list/query", response_model=PageResponseSchema[list[auth_user_schema.AuthUserOutSchema]], summary="获取用户列表"
 )
 async def list_query(
-        params: PageParams = Depends(),
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
+    params: PageParams = Depends(),
+    session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
 ):
     v_options = [selectinload(AuthUserModel.roles)]
     v_schema = auth_user_schema.AuthUserOutSchema
@@ -77,8 +77,8 @@ async def list_query(
 
 @router.get("/one/query", response_model=PageResponseSchema[auth_user_schema.AuthUserOutSchema], summary="获取用户信息")
 async def one_query(
-        data_id: int = Query(..., description="用户编号"),
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
+    data_id: int = Query(..., description="用户编号"),
+    session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
 ):
     v_options = [selectinload(AuthUserModel.roles)]
     data = await AuthUserCRUD(session).get_data(
@@ -89,7 +89,7 @@ async def one_query(
 
 @router.get("/recent/month/user/query", response_model=PageResponseSchema[dict], summary="获取最近一个月的用户新增情况")
 async def recent_month_user_query(
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
+    session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter),
 ):
     return RestfulResponse.success(data=await UserService(session).get_recent_users_count())
 
@@ -113,9 +113,7 @@ async def orm_db_getter_test():
 
 
 @router.post("/orm/03/test", response_model=ResponseSchema[str], summary="ORM 多对多（多对一也可用）关联查询测试")
-async def orm_03_test(
-        session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter)
-):
+async def orm_03_test(session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter)):
     """
     ORM 多对多（多对一也可用）关联查询测试
     """

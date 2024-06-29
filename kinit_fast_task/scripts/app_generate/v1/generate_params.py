@@ -7,7 +7,6 @@ from kinit_fast_task.utils.logger import TaskLogger
 
 
 class ParamsGenerate(GenerateBase):
-
     def __init__(self, json_config: JSONConfigSchema, task_log: TaskLogger):
         """
         初始化工作
@@ -28,7 +27,7 @@ class ParamsGenerate(GenerateBase):
             self.task_log.warning("Params 文件已存在，正在删除重新写入")
             self.file_path.unlink()
 
-        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.create_pag(self.file_path.parent)
         self.file_path.touch()
 
         code = self.generate_code()
@@ -42,7 +41,7 @@ class ParamsGenerate(GenerateBase):
         code = self.generate_file_desc(self.file_path.name, "1.0", self.json_config.app_desc)
 
         modules = {
-            "fastapi": ["Depends", "Query"],
+            "fastapi": ["Depends"],
             f"{self.project_name}.app.depends.Paging": ["Paging", "QueryParams"],
         }
         code += self.generate_modules_code(modules)

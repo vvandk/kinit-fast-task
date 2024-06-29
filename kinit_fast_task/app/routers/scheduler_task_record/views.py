@@ -25,8 +25,6 @@ async def list_query(
     params: PageParams = Depends(),
     session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
-    datas = await SchedulerTaskRecordCURD(session).get_datas(
-        **params.dict(), v_return_type=ReturnType.DICT
-    )
+    datas = await SchedulerTaskRecordCURD(session).get_datas(**params.dict(), v_return_type=ReturnType.DICT)
     total = await SchedulerTaskRecordCURD(session).get_count(**params.to_count())
     return RestfulResponse.success(data=datas, total=total, page=params.page, limit=params.limit)

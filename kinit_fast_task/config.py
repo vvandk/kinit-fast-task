@@ -27,11 +27,10 @@ class Settings(BaseSettings):
     3. dotenv_settings：从 dotenv（.env）文件加载的变量。
     4. settings_cls：BaseSettings 模型的默认字段值。
     """
+
     # 单体开发
     model_config = SettingsConfigDict(
-        env_file=str(_BASE_PATH.parent / '.env'),
-        env_file_encoding="utf-8",
-        extra="ignore"
+        env_file=str(_BASE_PATH.parent / ".env"), env_file_encoding="utf-8", extra="ignore"
     )
 
     # 模块开发
@@ -253,6 +252,7 @@ class GlobalSettings(BaseSettings):
     """
     全局统一配置入口
     """
+
     BASE_PATH: Path = _BASE_PATH
     # 项目定时任务配置
     task: TaskSettings = TaskSettings()

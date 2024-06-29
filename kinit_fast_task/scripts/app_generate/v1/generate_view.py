@@ -7,7 +7,6 @@ from kinit_fast_task.utils.logger import TaskLogger
 
 
 class ViewGenerate(GenerateBase):
-
     def __init__(self, json_config: JSONConfigSchema, task_log: TaskLogger):
         """
         初始化工作
@@ -28,7 +27,7 @@ class ViewGenerate(GenerateBase):
             self.task_log.warning("Views 文件已存在，正在删除重新写入")
             self.file_path.unlink()
         else:
-            self.file_path.parent.mkdir(parents=True, exist_ok=True)
+            self.create_pag(self.file_path.parent)
             self.file_path.touch()
         self.file_path.touch()
         code = self.generate_code()
@@ -64,7 +63,7 @@ class ViewGenerate(GenerateBase):
             f"{self.project_name}.db.database_factory": ["DBFactory"],
             f"{self.project_name}.app.cruds.{crud_file_name}": [self.json_config.crud.class_name],
             f"{self.project_name}.app.schemas": [schema_file_name],
-            ".params": ["PageParams"]
+            ".params": ["PageParams"],
         }
         return modules
 
@@ -78,7 +77,7 @@ class ViewGenerate(GenerateBase):
         schema_file_name = Path(self.json_config.schemas.filename).stem
 
         create_schema = f"{schema_file_name}.{self.json_config.schemas.create_class_name}"
-        update_schema = f"{schema_file_name}.{self.json_config.schemas.update_class_name}"
+        update_schema = f'{schema_file_name}.{self.json_config.schemas.update_class_name} = Body(..., description="更新内容")'
         simple_out_schema = f"{schema_file_name}.{self.json_config.schemas.simple_out_class_name}"
 
         session = 'session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter)'
@@ -90,7 +89,7 @@ class ViewGenerate(GenerateBase):
 
         base_code += f'\n\n@router.put("/update", response_model=ResponseSchema[str], summary="更新{zh_name}")'
         base_code += f'\nasync def update(data_id: int = Body(..., description="{zh_name}编号"), data: {update_schema}, {session}):'
-        base_code += f'\n\treturn RestfulResponse.success(await {crud}(session).put_data(data_id, data))\n'
+        base_code += f'\n\treturn RestfulResponse.success(await {crud}(session).update_data(data_id, data))\n'
 
         base_code += f'\n\n@router.delete("/delete", response_model=ResponseSchema[str], summary="批量删除{zh_name}")'
         base_code += f'\nasync def delete(data_ids: list[int] = Body(..., description="{zh_name}编号列表"), {session}):'
