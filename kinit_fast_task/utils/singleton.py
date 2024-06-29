@@ -33,7 +33,7 @@ class Singleton(type):
 
     使用例子：
 
-    >>> class DatabaseFactory(metaclass=Singleton):
+    >>> class DBFactory(metaclass=Singleton):
         ...
 
     实现类时指定元类为单例类即可实现单例模式

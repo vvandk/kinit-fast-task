@@ -3,7 +3,7 @@
 # @File           : views.py
 # @IDE            : PyCharm
 # @Desc           : 路由，视图文件
-from kinit_fast_task.db.database_factory import DatabaseFactory
+from kinit_fast_task.db.database_factory import DBFactory
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from fastapi import APIRouter, Depends, Query
 
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/scheduler/task", tags=["通用调度任务管理"])
 @router.post("/create", response_model=ResponseSchema[str], summary="创建任务，添加任务")
 async def create(
     data: scheduler_task_list_schema.TaskCreateSchema,
-    session: AsyncIOMotorClientSession = Depends(DatabaseFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
     """
     添加任务示例：
@@ -71,7 +71,7 @@ async def create(
 )
 async def list_query(
     params: PageParams = Depends(),
-    session: AsyncIOMotorClientSession = Depends(DatabaseFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
     datas = await SchedulerTaskListCURD(session).get_datas(
         **params.dict(), v_return_type=ReturnType.DICT
@@ -85,7 +85,7 @@ async def list_query(
 )
 async def one_query(
     data_id: str = Query(..., description="任务编号"),
-    session: AsyncIOMotorClientSession = Depends(DatabaseFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
     data = await SchedulerTaskListCURD(session).get_data(
         data_id, v_return_type=ReturnType.DICT
@@ -96,7 +96,7 @@ async def one_query(
 @router.put("/stop/task/update", response_model=ResponseSchema[str], summary="暂停任务")
 async def stop_task_update(
     data_id: str = Query(..., description="任务编号"),
-    session: AsyncIOMotorClientSession = Depends(DatabaseFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
     data = await SchedulerTaskListCURD(session).stop_task(data_id)
     return RestfulResponse.success(data=data)
@@ -105,7 +105,7 @@ async def stop_task_update(
 @router.put("/start/task/update", response_model=ResponseSchema[str], summary="开启任务")
 async def start_task_update(
     data_id: str = Query(..., description="任务编号"),
-    session: AsyncIOMotorClientSession = Depends(DatabaseFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
     data = await SchedulerTaskListCURD(session).start_task(data_id)
     return RestfulResponse.success(data=data)

@@ -12,10 +12,10 @@ class ModelConfigSchema(BaseModel):
 
 class SchemaConfigSchema(BaseModel):
     filename: str = Field(..., description="文件名称")
-    base: str = Field(..., description="base schema 类名")
-    create: str = Field(..., description="create schema 类名")
-    update: str = Field(..., description="update schema 类名")
-    simple_out: str = Field(..., description="simple_out schema 类名")
+    base_class_name: str = Field(..., description="base schema 类名")
+    create_class_name: str = Field(..., description="create schema 类名")
+    update_class_name: str = Field(..., description="update schema 类名")
+    simple_out_class_name: str = Field(..., description="simple_out schema 类名")
 
 
 class CRUDConfigSchema(BaseModel):
@@ -23,7 +23,17 @@ class CRUDConfigSchema(BaseModel):
     class_name: str = Field(..., description="类名")
 
 
+class ParamsConfigSchema(BaseModel):
+    filename: str = Field(..., description="文件名称")
+    class_name: str = Field(..., description="类名")
+
+
 RouterAction = Literal["create", "update", "delete", "list_query", "one_query"]
+
+
+class ViewsConfigSchema(BaseModel):
+    filename: str = Field(..., description="文件名称")
+    routers: list[RouterAction] = Field(..., description="需要生成的路由")
 
 
 class JSONConfigSchema(BaseModel):
@@ -33,4 +43,5 @@ class JSONConfigSchema(BaseModel):
     model: ModelConfigSchema = Field(..., description="ORM Model 配置")
     schemas: SchemaConfigSchema = Field(..., description="schema 序列化配置")
     crud: CRUDConfigSchema = Field(..., description="crud 配置")
-    routers: list[RouterAction] = Field(..., description="需要生成的路由")
+    params: ParamsConfigSchema = Field(..., description="params 配置")
+    views: ViewsConfigSchema = Field(..., description="views 配置")

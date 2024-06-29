@@ -57,7 +57,7 @@ def refactoring_exception(app: FastAPI):
         func_desc = "捕捉到自定义CustomException异常：custom_exception_handler"
         log.error(f"请求地址：{request.url.__str__()} {func_desc} 异常信息：{exc.message} {exc.desc}")
         # 打印栈信息，方便追踪排查异常
-        log.exception(exc)
+        # log.exception(exc)
         return JSONResponse(
             status_code=exc.status_code,
             content={"message": exc.message, "code": exc.code},
@@ -71,7 +71,7 @@ def refactoring_exception(app: FastAPI):
         func_desc = "捕捉到重写HTTPException异常异常：unicorn_exception_handler"
         log.error(f"请求地址：{request.url.__str__()} {func_desc} 异常信息：{exc.detail}")
         # 打印栈信息，方便追踪排查异常
-        log.exception(exc)
+        # log.exception(exc)
         return JSONResponse(
             status_code=exc.status_code,
             content={
@@ -88,7 +88,7 @@ def refactoring_exception(app: FastAPI):
         func_desc = "捕捉到重写请求验证异常异常：validation_exception_handler"
         log.error(f"请求地址：{request.url.__str__()} {func_desc} 异常信息：{exc.errors()}")
         # 打印栈信息，方便追踪排查异常
-        log.exception(exc)
+        # log.exception(exc)
         msg = exc.errors()[0].get("msg")
         if msg == "field required":
             msg = "请求失败，缺少必填项！"
@@ -113,7 +113,7 @@ def refactoring_exception(app: FastAPI):
         func_desc = "捕捉到值异常：value_exception_handler"
         log.error(f"请求地址：{request.url.__str__()} {func_desc} 异常信息：{exc.__str__()}")
         # 打印栈信息，方便追踪排查异常
-        log.exception(exc)
+        # log.exception(exc)
         return JSONResponse(
             status_code=fastapi_status.HTTP_200_OK,
             content=jsonable_encoder({"message": exc.__str__(), "code": UtilsStatus.HTTP_ERROR}),
@@ -127,7 +127,7 @@ def refactoring_exception(app: FastAPI):
         func_desc = "捕捉到全局异常：all_exception_handler"
         log.error(f"请求地址：{request.url.__str__()} {func_desc} 异常信息：{exc.__str__()}")
         # 打印栈信息，方便追踪排查异常
-        log.exception(exc)
+        # log.exception(exc)
         return JSONResponse(
             status_code=fastapi_status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=jsonable_encoder({"message": "接口异常，请联系管理员！", "code": UtilsStatus.HTTP_500}),

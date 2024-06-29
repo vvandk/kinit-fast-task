@@ -5,7 +5,7 @@
 # @Desc           : SQLAlchemy ORM 会话管理
 
 from collections.abc import AsyncGenerator
-from sqlalchemy import text
+from sqlalchemy import text, QueuePool
 
 from kinit_fast_task.core import CustomException
 from kinit_fast_task.db.async_base import AsyncAbstractDatabase
@@ -53,23 +53,37 @@ class ORMDatabase(AsyncAbstractDatabase):
             echo=settings.db.ORM_DB_ECHO,
             echo_pool=False,
             pool_pre_ping=True,
-            pool_recycle=3600,
+            pool_recycle=3,
             pool_size=5,
-            max_overflow=5,
+            max_overflow=2,
             connect_args={},
         )
 
-        """
-        # 创建会话工厂
-        # autocommit=False: 这表明事务不会在每次操作后自动提交。在这种模式下，需要手动提交事务，这给予了更好的控制，可以在执行多个操作后作为一个整体提交。
-        # autoflush=False: 这意味着在执行查询之前，SQLAlchemy 不会自动刷新（发送）当前会话中的更改到数据库。这可以避免不必要的数据库操作，提高性能。
-        # bind=async_engine: 这里绑定了异步引擎 async_engine，该引擎负责与数据库进行异步通信。
-        # expire_on_commit=True: 设置为 True 表示在提交事务后，会话中的所有实例都将过期并在下次访问时自动重新加载。
-        # class_=AsyncSession: 指定会话类为 AsyncSession，这是进行异步操作的会话类型。
-        """  # noqa E501
         self._session_factory = async_sessionmaker(
             autocommit=False, autoflush=False, bind=self._engine, expire_on_commit=True, class_=AsyncSession
         )
+
+    def get_pool_status(self):
+        """
+        获取当前连接池状态
+        """
+        pool = self._engine.pool
+        if isinstance(pool, QueuePool):
+            status = {
+                "checked_out": pool.checkedout(),  # 当前使用中的连接数
+                "overflow": pool._overflow,  # 当前溢出的连接数
+                "pool_size": pool.size(),  # 连接池大小
+                "checked_in": pool.size() - pool.checkedout()  # 空闲连接数
+            }
+            print("\n=======================BEGIN=======================")
+            print(f"当前使用中的连接数: {status['checked_out']}")
+            print(f"连接池大小: {status['pool_size']}")
+            print(f"当前溢出的连接数: {status['overflow']}")
+            print(f"空闲连接数: {status['checked_in']}")
+            print("========================EOF========================")
+            return status
+        else:
+            raise TypeError("Pool is not a QueuePool instance")
 
     async def db_transaction_getter(self) -> AsyncGenerator[AsyncSession, None]:
         """

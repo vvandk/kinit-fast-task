@@ -16,8 +16,6 @@ class ModelToJson(ModelToJsonBase):
     def to_json(self) -> dict:
         """
         转为 1.0 JSON 配置文件
-
-        :return:
         """
         fields = self.parse_model_fields()
         json_config = json_config_schema.JSONConfigSchema(
@@ -33,16 +31,23 @@ class ModelToJson(ModelToJsonBase):
                 },
                 "schemas": {
                     "filename": f"{self.app_name}_schema.py",
-                    "base": f"{GenerateBase.snake_to_camel(self.app_name)}Schema",
-                    "create": f"{GenerateBase.snake_to_camel(self.app_name)}CreateSchema",
-                    "update": f"{GenerateBase.snake_to_camel(self.app_name)}UpdateSchema",
-                    "simple_out": f"{GenerateBase.snake_to_camel(self.app_name)}SimpleOutSchema"
+                    "base_class_name": f"{GenerateBase.snake_to_camel(self.app_name)}Schema",
+                    "create_class_name": f"{GenerateBase.snake_to_camel(self.app_name)}CreateSchema",
+                    "update_class_name": f"{GenerateBase.snake_to_camel(self.app_name)}UpdateSchema",
+                    "simple_out_class_name": f"{GenerateBase.snake_to_camel(self.app_name)}SimpleOutSchema"
                 },
                 "crud": {
                     "filename": f"{self.app_name}_crud.py",
                     "class_name": f"{GenerateBase.snake_to_camel(self.app_name)}CRUD",
                 },
-                "routers": ["create", "update", "delete", "list_query", "one_query"]
+                "params": {
+                    "filename": "params.py",
+                    "class_name": "PageParams",
+                },
+                "views": {
+                    "filename": "views.py",
+                    "routers": ["create", "update", "delete", "list_query", "one_query"]
+                }
             }
         )
         return json_config.model_dump()

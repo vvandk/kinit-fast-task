@@ -100,22 +100,24 @@ class AppGenerate:
         """
         json_config = self.read_json(json_config_file)
         version = json_config["version"]
-        print(json_config)
         if version == "1.0":
             gc = GenerateCodeV1(json_config)
         else:
             raise NotImplementedError(f"version {version} not implemented")
         gc.generate()
+        return True
 
 
 if __name__ == "__main__":
     app = AppGenerate()
-    config = app.model_to_json(
-        model_class_name="AuthUserModel",
-        app_name="auth_user",
-        app_desc="用户功能",
-        filename="data.json"
-    )
+
+    # config = app.model_to_json(
+    #     model_class_name="AuthTestModel",
+    #     app_name="auth_test",
+    #     app_desc="测试",
+    #     filename="test_data.json"
+    # )
     # print(json.dumps(config, indent=4, ensure_ascii=False))
 
-    app.json_to_code("data.json")
+    app.json_to_code("test_data.json")
+

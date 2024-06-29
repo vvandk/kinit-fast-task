@@ -12,7 +12,7 @@ from kinit_fast_task.utils.singleton import Singleton
 from typing import Literal
 
 
-class DatabaseFactory(metaclass=Singleton):
+class DBFactory(metaclass=Singleton):
     """
     数据库工厂类，使用单例模式来管理数据库实例的创建和获取
 

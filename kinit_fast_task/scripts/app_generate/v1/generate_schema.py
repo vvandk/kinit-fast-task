@@ -3,17 +3,12 @@
 # @File           : schema_generate.py
 # @IDE            : PyCharm
 # @desc           : schema 代码生成
-
-
-from sqlalchemy import inspect as model_inspect
 from pathlib import Path
 
-from kinit_fast_task.app.models.base.orm import AbstractORMModel
 from kinit_fast_task.core import log
-from kinit_fast_task.scripts.app_generate.utils.schema import SchemaField
-from sqlalchemy.sql.schema import Column as ColumnType
 from kinit_fast_task.scripts.app_generate.utils.generate_base import GenerateBase
 from kinit_fast_task.scripts.app_generate.v1.json_config_schema import JSONConfigSchema
+from kinit_fast_task.config import settings
 
 
 class SchemaGenerate(GenerateBase):
@@ -24,8 +19,9 @@ class SchemaGenerate(GenerateBase):
         初始化工作
 
         :param json_config: 
-        """  # noqa E501
+        """
         self.json_config = json_config
+        self.file_path = settings.BASE_PATH / "app" / "schemas" / self.json_config.schemas.filename
 
     def write_generate_code(self):
         """
@@ -33,15 +29,16 @@ class SchemaGenerate(GenerateBase):
 
         :return:
         """
-        if self.schema_file_path.exists():
-            log.info("Schema 文件已存在，正在删除重新写入")
-            self.schema_file_path.unlink()
 
-        self.schema_file_path.parent.mkdir(parents=True, exist_ok=True)
-        self.schema_file_path.touch()
+        if self.file_path.exists():
+            log.info("Schema 文件已存在，正在删除重新写入")
+            self.file_path.unlink()
+
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.file_path.touch()
 
         code = self.generate_code()
-        self.schema_file_path.write_text(code, "utf-8")
+        self.file_path.write_text(code, "utf-8")
         log.info("Schema 代码创建完成")
 
     def generate_code(self) -> str:
@@ -50,7 +47,7 @@ class SchemaGenerate(GenerateBase):
         :return:
         """
         schema = self.json_config.schemas
-        code = self.generate_file_desc(schema.filename, "1.0", "Pydantic 模型，用于数据库序列化操作")
+        code = self.generate_file_desc(self.file_path.name, "1.0", "Pydantic 模型，用于数据库序列化操作")
 
         modules = {
             "pydantic": ["Field"],
@@ -61,36 +58,34 @@ class SchemaGenerate(GenerateBase):
 
         # 生成字段列表
         schema_field_code = ""
-        for item in fields:
-            field = f'\n\t{item.name}: {item.field_type} {"| None " if item.nullable else ""}'
+        for item in self.json_config.model.fields:
+            field = f'\n\t{item.name}: {item.field_python_type} {"| None " if item.nullable else ""}'
             default = None
             if item.default is not None:
-                if item.field_type == "str":
+                if item.field_python_type == "str":
                     default = f'"{item.default}"'
                 else:
                     default = item.default
             elif default is None and not item.nullable:
                 default = "..."
 
-            field += f'= Field({default}, description="{item.title}")'
+            field += f'= Field({default}, description="{item.comment}")'
             schema_field_code += field
         schema_field_code += "\n"
 
-        base_schema_code_class_name = f"{self.base_class_name}Base"
-
-        base_schema_code = f"\n\nclass {base_schema_code_class_name}(BaseSchema):"
+        base_schema_code = f"\n\nclass {schema.base_class_name}(BaseSchema):"
         base_schema_code += schema_field_code
         code += base_schema_code
 
-        create_schema_code = f"\n\nclass {self.base_class_name}Create({base_schema_code_class_name}):"
+        create_schema_code = f"\n\nclass {schema.create_class_name}({schema.base_class_name}):"
         create_schema_code += "\n\tpass\n"
         code += create_schema_code
 
-        update_schema_code = f"\n\nclass {self.base_class_name}Update({base_schema_code_class_name}):"
+        update_schema_code = f"\n\nclass {schema.update_class_name}({schema.base_class_name}):"
         update_schema_code += "\n\tpass\n"
         code += update_schema_code
 
-        base_out_schema_code = f"\n\nclass {self.schema_simple_out_class_name}({base_schema_code_class_name}):"
+        base_out_schema_code = f"\n\nclass {schema.simple_out_class_name}({schema.base_class_name}):"
         base_out_schema_code += '\n\tid: int = Field(..., description="编号")'
         base_out_schema_code += '\n\tcreate_datetime: DatetimeStr = Field(..., description="创建时间")'
         base_out_schema_code += '\n\tupdate_datetime: DatetimeStr = Field(..., description="更新时间")'

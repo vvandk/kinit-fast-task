@@ -8,7 +8,7 @@ import datetime
 import json
 from enum import Enum
 
-from kinit_fast_task.db.database_factory import DatabaseFactory
+from kinit_fast_task.db.database_factory import DBFactory
 from kinit_fast_task.utils.response_code import Status as UtilsStatus
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -58,7 +58,7 @@ class MongoCrud:
         :param schema: 默认序列化 schema
         :param is_object_id: _id 列是否为 ObjectId 格式
         """
-        self.db = DatabaseFactory.get_db_instance("mongo").db_getter()
+        self.db = DBFactory.get_db_instance("mongo").db_getter()
         self.session = session
         self.collection = self.db[collection] if collection else None
         self.simple_out_schema = schema

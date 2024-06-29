@@ -12,7 +12,7 @@ from pydantic import PostgresDsn, RedisDsn, MongoDsn
 from ipaddress import IPv4Address
 
 # 项目根目录
-_BASE_PATH: Path = Path(__file__).parent
+_BASE_PATH: Path = Path(__file__).resolve().parent
 
 
 class Settings(BaseSettings):
@@ -173,7 +173,7 @@ class SystemSettings(Settings):
     # 是否将日志打印在控制台
     LOG_CONSOLE_OUT: bool = True
     # 日志目录地址
-    LOG_PATH: str = str(_BASE_PATH / "logs")
+    LOG_PATH: str = str(_BASE_PATH / "logs" / "requests.log")
 
     # 跨域解决
     # 详细解释：https://cloud.tencent.com/developer/article/1886114

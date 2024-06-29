@@ -1,12 +1,12 @@
 {
     "version": "1.0",
-    "app_name": "auth_user",
-    "app_desc": "用户功能",
+    "app_name": "auth_test",
+    "app_desc": "测试",
     "model": {
-        "filename": "auth_user_model.py",
-        "class_name": "AuthUserModel",
+        "filename": "auth_test_model.py",
+        "class_name": "AuthTestModel",
         "table_args": {
-            "comment": "用户表"
+            "comment": "测试表"
         },
         "fields": [
             {
@@ -17,30 +17,26 @@
                     "length": 255
                 },
                 "nullable": false,
-                "default": "aaaaaa",
-                "comment": "用户名"
+                "default": null,
+                "comment": "测试名称"
             },
             {
-                "name": "telephone",
-                "field_type": "String",
+                "name": "desc",
+                "field_type": "Text",
                 "field_python_type": "str",
-                "field_kwargs": {
-                    "length": 11
-                },
+                "field_kwargs": {},
                 "nullable": false,
                 "default": null,
-                "comment": "手机号"
+                "comment": "描述信息"
             },
             {
-                "name": "email",
-                "field_type": "String",
-                "field_python_type": "str",
-                "field_kwargs": {
-                    "length": null
-                },
-                "nullable": true,
+                "name": "age",
+                "field_type": "Integer",
+                "field_python_type": "int",
+                "field_kwargs": {},
+                "nullable": false,
                 "default": null,
-                "comment": "邮箱"
+                "comment": "整数"
             },
             {
                 "name": "is_active",
@@ -50,36 +46,6 @@
                 "nullable": false,
                 "default": true,
                 "comment": "是否可用"
-            },
-            {
-                "name": "age",
-                "field_type": "Integer",
-                "field_python_type": "int",
-                "field_kwargs": {},
-                "nullable": false,
-                "default": null,
-                "comment": "年龄"
-            },
-            {
-                "name": "content",
-                "field_type": "Text",
-                "field_python_type": "str",
-                "field_kwargs": {},
-                "nullable": false,
-                "default": null,
-                "comment": "年龄"
-            },
-            {
-                "name": "amount",
-                "field_type": "DECIMAL",
-                "field_python_type": "Decimal",
-                "field_kwargs": {
-                    "precision": 10,
-                    "scale": 2
-                },
-                "nullable": false,
-                "default": null,
-                "comment": "年龄"
             },
             {
                 "name": "id",
@@ -129,21 +95,28 @@
         ]
     },
     "schemas": {
-        "filename": "auth_user_schema.py",
-        "base_class_name": "AuthUserSchema",
-        "create_class_name": "AuthUserCreateSchema",
-        "update_class_name": "AuthUserUpdateSchema",
-        "simple_out_class_name": "AuthUserSimpleOutSchema"
+        "filename": "auth_test_schema.py",
+        "base_class_name": "AuthTestSchema",
+        "create_class_name": "AuthTestCreateSchema",
+        "update_class_name": "AuthTestUpdateSchema",
+        "simple_out_class_name": "AuthTestSimpleOutSchema"
     },
     "crud": {
-        "filename": "auth_user_crud.py",
-        "class_name": "AuthUserCRUD"
+        "filename": "auth_test_crud.py",
+        "class_name": "AuthTestCRUD"
     },
-    "routers": [
-        "create",
-        "update",
-        "delete",
-        "list_query",
-        "one_query"
-    ]
+    "params": {
+        "filename": "params.py",
+        "class_name": "PageParams"
+    },
+    "views": {
+        "filename": "views.py",
+        "routers": [
+            "create",
+            "update",
+            "delete",
+            "list_query",
+            "one_query"
+        ]
+    }
 }

@@ -51,6 +51,7 @@ class ModelToJsonBase:
             item = schema_base.ModelFieldSchema(
                 name=column.name,
                 field_type=field_type,
+                field_python_type=column.type.python_type.__name__,
                 field_kwargs=field_kwargs,
                 nullable=column.nullable,
                 default=default,

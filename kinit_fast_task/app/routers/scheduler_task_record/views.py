@@ -3,7 +3,7 @@
 # @File           : views.py
 # @IDE            : PyCharm
 # @Desc           : 路由，视图文件
-from kinit_fast_task.db.database_factory import DatabaseFactory
+from kinit_fast_task.db.database_factory import DBFactory
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from fastapi import APIRouter, Depends
 
@@ -23,7 +23,7 @@ router = APIRouter(prefix="/scheduler/task/record", tags=["调度任务执行记
 )
 async def list_query(
     params: PageParams = Depends(),
-    session: AsyncIOMotorClientSession = Depends(DatabaseFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
 ):
     datas = await SchedulerTaskRecordCURD(session).get_datas(
         **params.dict(), v_return_type=ReturnType.DICT
