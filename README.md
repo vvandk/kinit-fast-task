@@ -244,14 +244,14 @@ http://127.0.0.1:9000/redoc
 ### 代码检查与格式化
 
 ```shell
+# 代码格式化
+ruff format
+
 # 代码规范检查：
 ruff check
 
 # 代码格式修复
 ruff check --fix
-
-# 代码格式化
-ruff format
 ```
 
 ### 接口定义
@@ -277,7 +277,7 @@ ruff format
 
 - [ ] Docker Compose 启动方式
 
-- [ ] App 代码生成工具
+- [x] App 代码生成工具
 
 - [ ] 文件管理功能模块，通过工厂模式支持：`本地 static`, `本地 temp`， `阿里云 OSS`，`七牛云`
 
@@ -335,7 +335,7 @@ Pycharm 2022.3.2
 
 ```python
 # @Version        : 1.0
-# @Update Time    : ${DATE} ${TIME}
+# @Update Time    : ${DATE}
 # @File           : ${NAME}.py
 # @IDE            : PyCharm
 # @Desc           : 文件描述信息
