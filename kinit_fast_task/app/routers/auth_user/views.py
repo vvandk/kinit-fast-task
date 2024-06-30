@@ -38,7 +38,7 @@ async def create(
           ]
         }
     """
-    return RestfulResponse.success(await AuthUserCRUD(session).create_data(data=data, v_return_obj=True))
+    return RestfulResponse.success(await AuthUserCRUD(session).create_data(data=data))
 
 
 @router.put("/update", response_model=ResponseSchema[str], summary="更新用户")
