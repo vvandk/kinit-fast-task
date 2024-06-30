@@ -104,7 +104,7 @@ async def orm_db_getter_test():
 
 
 @router.post("/orm/db/getter/02/test", response_model=ResponseSchema[str], summary="ORM db_getter 测试")
-async def orm_db_getter_test():
+async def orm_db_getter_test_02():
     """
     ORM db_getter 测试
     """
