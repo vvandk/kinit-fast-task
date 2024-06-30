@@ -5,7 +5,7 @@
 # @Desc           : 全局事件
 
 from fastapi import FastAPI
-from kinit_fast_task.db.database_factory import DBFactory
+from kinit_fast_task.db import DBFactory
 
 from kinit_fast_task.utils import log
 

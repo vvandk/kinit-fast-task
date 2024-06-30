@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, Body, Query
 from sqlalchemy.orm import selectinload
 
-from kinit_fast_task.db.database_factory import DBFactory
+from kinit_fast_task.db import DBFactory
 from kinit_fast_task.utils.response import RestfulResponse, ResponseSchema, PageResponseSchema
 from kinit_fast_task.app.cruds.auth_user_crud import AuthUserCRUD
 from kinit_fast_task.app.schemas import auth_user_schema

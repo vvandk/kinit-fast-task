@@ -4,7 +4,7 @@
 # @IDE            : PyCharm
 # @Desc           : 任务示例
 
-from kinit_fast_task.db.database_factory import DBFactory
+from kinit_fast_task.db import DBFactory
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from fastapi import APIRouter, Depends, Query
 

@@ -3,7 +3,7 @@
 # @File           : views.py
 # @IDE            : PyCharm
 # @Desc           : 路由，视图文件
-from kinit_fast_task.db.database_factory import DBFactory
+from kinit_fast_task.db import DBFactory
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from fastapi import APIRouter, Depends, Query
 

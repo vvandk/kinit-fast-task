@@ -8,7 +8,7 @@ import datetime
 import json
 from enum import Enum
 
-from kinit_fast_task.db.database_factory import DBFactory
+from kinit_fast_task.db import DBFactory
 from kinit_fast_task.utils.response_code import Status as UtilsStatus
 from bson import ObjectId
 from bson.errors import InvalidId

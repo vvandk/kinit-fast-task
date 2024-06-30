@@ -11,7 +11,7 @@ from sqlalchemy.orm import selectinload
 
 from kinit_fast_task.app.models.auth_user_model import AuthUserModel
 from kinit_fast_task.app.models.auth_role_model import AuthRoleModel
-from kinit_fast_task.db.database_factory import DBFactory
+from kinit_fast_task.db import DBFactory
 from kinit_fast_task.app.cruds.auth_user_crud import AuthUserCRUD
 from kinit_fast_task.app.schemas import auth_user_schema
 
