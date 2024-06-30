@@ -68,32 +68,23 @@ def migrate():
     log.info("数据库表迁移完成")
 
 
-# @shell_app.command()
-# def generate_app_code(
-#     model_file_name: str = typer.Option(..., help="模型文件名称"),
-#     read_only: bool = typer.Option(True, help="是否只打印代码，不写入文件"),
-#     zh_name: str = typer.Option(None, help="功能中文名称, 主要用于描述和注释，默认使用表说明信息 comment"),
-#     en_name: str = typer.Option(
-#         None, help="功能英文名称, 主要用于 Schema, Params, CRUD, URL 命名，默认使用 model file name"
-#     ),
-# ):
-#     """
-#     基于 ORM Model 生成 app 代码
-#
-#     命令示例（输出代码模式）：python main.py generate-app-code --model-file-name auth_user
-#     命令示例（写入代码模式）：python main.py generate-app-code --model-file-name auth_user --no-read-only
-#
-#     :return:
-#     """
-#     from kinit_fast_task.scripts.app_generate.main import AppGenerate
-#
-#     generate = AppGenerate(model_file_name, zh_name=zh_name, en_name=en_name)
-#     log.info(f"开始生成 {generate.zh_name} App 代码")
-#     if read_only:
-#         generate.generate_codes()
-#     else:
-#         generate.write_app_generate_code()
-#     log.info(f"{generate.zh_name} App 代码生成完成")
+@shell_app.command()
+def generate(
+    model: str = typer.Option(..., help="Model 类名, 示例：AuthUserModel"),
+    app_name: str = typer.Option(..., help="功能英文名称, 主要用于 Schema, Params, CRUD, URL 命名"),
+    app_desc: str = typer.Option(..., help="功能中文名称, 主要用于描述和注释"),
+    read_only: bool = typer.Option(True, help="是否只打印代码，不写入文件"),
+):
+    """
+    基于 ORM Model 生成 app 代码
+
+    命令示例（输出代码模式）：python main.py generate --model AuthTestModel --app-name auth_test --app-desc 测试
+    命令示例（写入代码模式）：python main.py generate --model AuthTestModel --app-name auth_test --app-desc 测试 --no-read-only
+    """  # noqa E501
+    from kinit_fast_task.scripts.app_generate.main import AppGenerate
+
+    ag = AppGenerate(verbose=False)
+    ag.model_to_code(model_class_name=model, app_name=app_name, app_desc=app_desc, read_only=read_only)
 
 
 if __name__ == "__main__":
