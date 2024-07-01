@@ -20,7 +20,7 @@ router = APIRouter(prefix="/bilibili/hot/new", tags=["bilibili 热搜数据"])
 
 @router.post("/task/create", response_model=ResponseSchema[str], summary="创建任务")
 async def task_create(
-    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
 ):
     """
     创建获取 bilibili 热搜数据任务
@@ -36,7 +36,7 @@ async def task_create(
     tags=["MongoDB 事务"],
 )
 async def mongo_transaction_example_create(
-    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
 ):
     """
     默认使用 Mongo 事务处理
@@ -66,7 +66,7 @@ async def mongo_no_transaction_example_create():
     tags=["MongoDB 事务"],
 )
 async def mongo_transaction_no_transaction_example_create(
-    session: AsyncIOMotorClientSession = Depends(DBFactory.get_db_instance("mongo").db_transaction_getter),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
 ):
     """
     使用与不使用事务示例

@@ -16,6 +16,7 @@ class AbstractORMModel(AsyncBaseORMModel):
 
     表配置官方文档：https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html
     支持 Enum 与 Literal 官方文档：https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html#using-python-enum-or-pep-586-literal-types-in-the-type-map
+    中文官方文档：https://docs.sqlalchemy.org.cn/en/20/orm/declarative_tables.html#using-annotated-declarative-table-type-annotated-forms-for-mapped-column
     """  # noqa E501
 
     __abstract__ = True

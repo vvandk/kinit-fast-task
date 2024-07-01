@@ -80,7 +80,7 @@ class ViewGenerate(GenerateBase):
         update_schema = f'{schema_file_name}.{self.json_config.schemas.update_class_name} = Body(..., description="更新内容")'
         simple_out_schema = f"{schema_file_name}.{self.json_config.schemas.simple_out_class_name}"
 
-        session = 'session: AsyncSession = Depends(DBFactory.get_db_instance("orm").db_transaction_getter)'
+        session = 'session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter)'
         crud = self.json_config.crud.class_name
 
         base_code = f'\n\n@router.post("/create", response_model=ResponseSchema[str], summary="创建{zh_name}")'

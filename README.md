@@ -18,6 +18,8 @@ OpenAPI 规范官方文档：https://swagger.io/specification/
 
 Ruff 官方文档：https://docs.astral.sh/ruff/
 
+SQLAlchemy 2.0 中文官方文档：https://docs.sqlalchemy.org.cn/en/20/orm/quickstart.html
+
 
 
 本项目为 KINIT 项目下的 基础定时任务版本，主推定时任务功能的使用：

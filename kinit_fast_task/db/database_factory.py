@@ -16,11 +16,11 @@ class DBFactory(metaclass=Singleton):
     """
     数据库工厂类，使用单例模式来管理数据库实例的创建和获取
 
-    :ivar _config_db: 存储数据库实例的字典，键为数据库类型和加载器名称的组合，值为数据库实例
+    :ivar _config_loader: 存储数据库实例的字典，键为数据库类型和加载器名称的组合，值为数据库实例
 
     Methods
     -------
-    get_db_instance(db_type, loader_name='default', db_url=None)
+    get_instance(db_type, loader_name='default', db_url=None)
         获取指定类型和加载器名称的数据库实例，如果实例不存在则创建并加载到配置加载器
 
     register(loader_name, loader)
@@ -33,32 +33,32 @@ class DBFactory(metaclass=Singleton):
         清空配置加载管理器
     """
 
-    _config_db: dict[str, AsyncAbstractDatabase] = {}
+    _config_loader: dict[str, AsyncAbstractDatabase] = {}
 
     @classmethod
-    def get_db_instance(
-        cls, db_type: Literal["orm", "mongo", "redis"], *, loader_name: str = "default", db_url: str = None
+    def get_instance(
+        cls, loader_type: Literal["orm", "mongo", "redis"], *, loader_name: str = "default", db_url: str = None
     ) -> AsyncAbstractDatabase:
         """
         获取指定类型和加载器名称的数据库实例，如果实例不存在则创建并加载到配置加载器
 
-        :param db_type: 数据库类型，可选值为 "orm", "mongo", "redis"
+        :param loader_type: 数据库类型，可选值为 "orm", "mongo", "redis"
         :param loader_name: 配置加载器名称，第一次创建连接成功后，存入 _config_db，存入方式默认与 db_type 拼接
         :param db_url: 数据库连接地址
         :return:
         """
-        db_key = f"{db_type}-{loader_name}"
-        if db_key in cls._config_db:
-            return cls._config_db[db_key]
+        db_key = f"{loader_type}-{loader_name}"
+        if db_key in cls._config_loader:
+            return cls._config_loader[db_key]
 
-        if db_type == "mongo":
+        if loader_type == "mongo":
             loader = MongoDatabase()
-        elif db_type == "orm":
+        elif loader_type == "orm":
             loader = ORMDatabase()
-        elif db_type == "redis":
+        elif loader_type == "redis":
             loader = RedisDatabase()
         else:
-            raise ValueError(f"不存在的数据库类型: {db_type}")
+            raise ValueError(f"不存在的数据库类型: {loader_type}")
         loader.create_connection(db_url)
         cls.register(db_key, loader)
         return loader
@@ -72,7 +72,7 @@ class DBFactory(metaclass=Singleton):
         :param loader: 配置加载器实例
         :return:
         """
-        cls._config_db[loader_name] = loader
+        cls._config_loader[loader_name] = loader
 
     @classmethod
     async def remove(cls, loader_name) -> bool:
@@ -82,8 +82,8 @@ class DBFactory(metaclass=Singleton):
         :param loader_name: 配置加载器名称
         :return: 删除成功返回 True
         """
-        if loader_name in cls._config_db:
-            loader = cls._config_db.pop(loader_name)
+        if loader_name in cls._config_loader:
+            loader = cls._config_loader.pop(loader_name)
             await loader.close_connection()
 
         return True
@@ -95,7 +95,8 @@ class DBFactory(metaclass=Singleton):
 
         :return: 清空成功返回 True
         """
-        for loader in cls._config_db.values():
+        for loader in cls._config_loader.values():
             await loader.close_connection()
 
+        cls._config_loader.clear()
         return True

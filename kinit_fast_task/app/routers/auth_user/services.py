@@ -61,7 +61,7 @@ class UserService:
 
         :return:
         """
-        orm_db: AsyncSession = DBFactory.get_db_instance("orm").db_getter()
+        orm_db: AsyncSession = DBFactory.get_instance("orm").db_getter()
 
         # 手动开启一个事务，事务在关闭时会自动 commit ，请勿在事务中使用 commit
         # 不关联的两种操作，请开启两个事务进行处理，比如第二个失败，不影响第一个 commit
@@ -89,7 +89,7 @@ class UserService:
 
         :return:
         """
-        orm_db: AsyncSession = DBFactory.get_db_instance("orm").db_getter()
+        orm_db: AsyncSession = DBFactory.get_instance("orm").db_getter()
 
         # 查询不需要事务
 
