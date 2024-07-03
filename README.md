@@ -151,7 +151,7 @@ github地址：[https://github.com/vvandk/kinit](https://gitee.com/link?target=h
 
 目前群聊已经达到 200 人，只能通过邀请进群，不能再直接扫描群二维码进群，需要进群的可以先加我，备注进群，我就拉你进群。
 
-<img src="https://ktianc.oss-cn-beijing.aliyuncs.com/resource/images/20240425/1714006642AjB2ixnH.jpg" alt="logo" style="zoom: 33%;" />
+<img src="https://ktianc.oss-cn-beijing.aliyuncs.com/resource/images/20240703/1719969784NPMyq0Jv.jpg" alt="logo" style="zoom: 33%;" />
 
 ## 首次使用
 
