@@ -98,24 +98,24 @@ class AuthSettings(Settings):
     ACCESS_TOKEN_CACHE_MINUTES: int = 30
 
 
-# class OSSSettings(Settings):
-#     """
-#     阿里云 OSS 配置
-#     """
-#
-#     # 阿里云对象存储OSS配置
-#     # 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。 # noqa: E501
-#     # yourEndpoint填写Bucket所在地域对应的Endpoint。
-#     # 以华东1（杭州）为例，Endpoint填写为 https://oss-cn-hangzhou.aliyuncs.com。
-#     #  *  [accessKeyId] {String}：通过阿里云控制台创建的AccessKey。
-#     #  *  [accessKeySecret] {String}：通过阿里云控制台创建的AccessSecret。
-#     #  *  [bucket] {String}：通过控制台或PutBucket创建的bucket。
-#     #  *  [endpoint] {String}：bucket所在的区域， 默认oss-cn-hangzhou。
-#     ACCESS_KEY_ID: str
-#     ACCESS_KEY_SECRET: str
-#     ENDPOINT: str
-#     BUCKET: str
-#     BASE_URL: str
+class OSSSettings(Settings):
+    """
+    阿里云 OSS 配置
+    """
+
+    # 阿里云对象存储OSS配置
+    # 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。 # noqa: E501
+    # yourEndpoint填写Bucket所在地域对应的Endpoint。
+    # 以华东1（杭州）为例，Endpoint填写为 https://oss-cn-hangzhou.aliyuncs.com。
+    #  *  [accessKeyId] {String}：通过阿里云控制台创建的AccessKey。
+    #  *  [accessKeySecret] {String}：通过阿里云控制台创建的AccessSecret。
+    #  *  [bucket] {String}：通过控制台或PutBucket创建的bucket。
+    #  *  [endpoint] {String}：bucket所在的区域， 默认oss-cn-hangzhou。
+    ACCESS_KEY_ID: str
+    ACCESS_KEY_SECRET: str
+    ENDPOINT: str
+    BUCKET: str
+    BASE_URL: str
 
 
 class DBSettings(Settings):
@@ -263,7 +263,7 @@ class GlobalSettings(BaseSettings):
     # 项目关联数据库配置
     db: DBSettings = DBSettings()
     # 阿里云 OSS 配置
-    # oss: OSSSettings = OSSSettings()
+    oss: OSSSettings = OSSSettings()
     # 系统基础配置
     system: SystemSettings = SystemSettings()
     # 系统路由
