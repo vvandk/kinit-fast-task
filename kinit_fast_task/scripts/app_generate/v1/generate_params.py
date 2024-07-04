@@ -19,20 +19,24 @@ class ParamsGenerate(GenerateBase):
         self.task_log = task_log
         self.task_log.info("开始生成 Params 代码, Params 文件地址为：", self.file_path, is_verbose=True)
 
-    def write_generate_code(self):
+    def write_generate_code(self, overwrite: bool = False):
         """
         生成 params 文件，以及代码内容
         """
         if self.file_path.exists():
-            self.task_log.warning("Params 文件已存在，正在删除重新写入")
-            self.file_path.unlink()
-
-        self.create_pag(self.file_path.parent)
+            if overwrite:
+                self.task_log.warning("Params 文件已存在, 已选择覆盖, 正在删除重新写入.")
+                self.file_path.unlink()
+            else:
+                self.task_log.warning("Params 文件已存在, 未选择覆盖, 不再进行 Params 代码生成.")
+                return False
+        else:
+            self.create_pag(self.file_path.parent)
         self.file_path.touch()
 
         code = self.generate_code()
         self.file_path.write_text(code, "utf-8")
-        self.task_log.success("Params 代码创建完成")
+        self.task_log.success("Params 代码写入完成")
 
     def generate_code(self) -> str:
         """
