@@ -14,7 +14,6 @@ import typer
 
 from kinit_fast_task.utils import log
 
-
 shell_app = typer.Typer(rich_markup_mode="rich")
 
 
@@ -70,21 +69,29 @@ def migrate():
 
 @shell_app.command()
 def generate(
-    model: str = typer.Option(..., help="Model 类名, 示例：AuthUserModel"),
-    app_name: str = typer.Option(..., help="功能英文名称, 主要用于 Schema, Params, CRUD, URL 命名"),
-    app_desc: str = typer.Option(..., help="功能中文名称, 主要用于描述和注释"),
-    read_only: bool = typer.Option(True, help="是否只打印代码，不写入文件"),
+    model: str = typer.Option(..., "--model", "-m", help="Model 类名, 示例：AuthUserModel"),
+    app_name: str = typer.Option(..., "--app-name", "-n", help="功能英文名称, 主要用于 Schema, Params, CRUD, URL 命名"),
+    app_desc: str = typer.Option(..., "--app-desc", "-d", help="功能中文名称, 主要用于描述和注释"),
+    write_only: bool = typer.Option(False, "--write-only", "-w", help="是否只写入文件"),
+    overwrite: bool = typer.Option(False, "--overwrite", "-o", help="是否在写入时覆盖文件"),
 ):
     """
     基于 ORM Model 生成 app 代码
 
-    命令示例（输出代码模式）：python main.py generate --model AuthTestModel --app-name auth_test --app-desc 测试
-    命令示例（写入代码模式）：python main.py generate --model AuthTestModel --app-name auth_test --app-desc 测试 --no-read-only
+    命令示例（输出代码模式）：python main.py generate -m AuthTestModel -n auth_test -d 测试
+    命令示例（写入代码不覆盖模式）：python main.py generate -m AuthTestModel -n auth_test -d 测试 -w
+    命令示例（写入代码并覆盖模式）：python main.py generate -m AuthTestModel -n auth_test -d 测试 -w -o
     """  # noqa E501
     from kinit_fast_task.scripts.app_generate.main import AppGenerate
 
     ag = AppGenerate(verbose=False)
-    ag.model_to_code(model_class_name=model, app_name=app_name, app_desc=app_desc, read_only=read_only)
+    ag.model_to_code(
+        model_class_name=model,
+        app_name=app_name,
+        app_desc=app_desc,
+        write_only=write_only,
+        overwrite=overwrite
+    )
 
 
 if __name__ == "__main__":

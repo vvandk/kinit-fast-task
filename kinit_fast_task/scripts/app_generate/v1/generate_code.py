@@ -42,22 +42,20 @@ class GenerateCode:
         self.task_log.info(f"\n{views_code}", is_verbose=False)
         self.task_log.success("Views 代码生成完成")
 
-    def write_generate(self):
+    def write_generate(self, overwrite: bool = False):
         """
         写入生成代码
+
+        :param overwrite: 是否在写入时覆盖文件
         """
         schema = SchemaGenerate(self.json_config, self.task_log)
-        schema.write_generate_code()
-        self.task_log.success("Schema 代码写入完成")
+        schema.write_generate_code(overwrite=overwrite)
 
         crud = CrudGenerate(self.json_config, self.task_log)
-        crud.write_generate_code()
-        self.task_log.success("CRUD 代码写入完成")
+        crud.write_generate_code(overwrite=overwrite)
 
         params = ParamsGenerate(self.json_config, self.task_log)
-        params.write_generate_code()
-        self.task_log.success("Params 代码写入完成")
+        params.write_generate_code(overwrite=overwrite)
 
         views = ViewGenerate(self.json_config, self.task_log)
-        views.write_generate_code()
-        self.task_log.success("Views 代码写入完成")
+        views.write_generate_code(overwrite=overwrite)
