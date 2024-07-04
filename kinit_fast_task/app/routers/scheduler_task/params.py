@@ -2,7 +2,7 @@
 # @Create Time    : 2024/05/17 14:37
 # @File           : params.py
 # @IDE            : PyCharm
-# @Desc           : 用户
+# @Desc           :
 
 from fastapi import Depends
 from kinit_fast_task.app.depends.Paging import Paging, QueryParams

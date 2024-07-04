@@ -7,7 +7,7 @@
 from fastapi import APIRouter, Depends
 
 from kinit_fast_task.app.cruds.base.mongo import ReturnType
-from kinit_fast_task.app.routers.scheduler_task.params import PageParams
+from kinit_fast_task.app.routers.system_record.params import PageParams
 from kinit_fast_task.utils.response import RestfulResponse, PageResponseSchema
 from kinit_fast_task.app.schemas import record_operation_schema
 from kinit_fast_task.app.cruds.record_operation_crud import OperationCURD
