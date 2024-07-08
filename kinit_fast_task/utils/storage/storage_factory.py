@@ -5,10 +5,12 @@
 # @Desc           : 文件上传工厂类
 from typing import Literal
 
+from kinit_fast_task.config import settings
 from kinit_fast_task.utils.storage import AbstractStorage
 from kinit_fast_task.utils.singleton import Singleton
 from kinit_fast_task.utils.storage import LocalStorage
 from kinit_fast_task.utils.storage import OSSStorage
+from kinit_fast_task.utils.storage import TempStorage
 from kinit_fast_task.utils.storage import KodoStorage
 
 
@@ -17,7 +19,7 @@ class StorageFactory(metaclass=Singleton):
     _config_loader: dict[str, AbstractStorage] = {}
 
     @classmethod
-    def get_instance(cls, loader_type: Literal["local", "oss", "kodo"]) -> AbstractStorage:
+    def get_instance(cls, loader_type: Literal["local", "temp", "oss", "kodo"]) -> AbstractStorage:
         """
         获取指定类型和加载器名称的文件存储实例，如果实例不存在则创建并加载到配置加载器
         """
@@ -25,13 +27,22 @@ class StorageFactory(metaclass=Singleton):
             return cls._config_loader[loader_type]
 
         if loader_type == "local":
+            if not settings.storage.LOCAL_ENABLE:
+                raise PermissionError("未启动本地文件存储功能, 如需要请开启 settings.storage.LOCAL_ENABLE！")
             loader = LocalStorage()
+        elif loader_type == "temp":
+            if not settings.storage.TEMP_ENABLE:
+                raise PermissionError("未启动 TEMP 存储功能, 如需要请开启 settings.storage.TEMP_ENABLE！")
+            loader = TempStorage()
         elif loader_type == "kodo":
-            loader = KodoStorage()
+            raise NotImplementedError("未实现七牛云文件上传功能！")
+            # loader = KodoStorage()
         elif loader_type == "oss":
+            if not settings.storage.OSS_ENABLE:
+                raise PermissionError("未启动 OSS 存储功能, 如需要请开启 settings.storage.OSS_ENABLE！")
             loader = OSSStorage()
         else:
-            raise ValueError(f"不存在的文件存储类型: {loader_type}")
+            raise KeyError(f"不存在的文件存储类型: {loader_type}")
         cls.register(loader_type, loader)
         return loader
 

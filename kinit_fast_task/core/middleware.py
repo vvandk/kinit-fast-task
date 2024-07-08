@@ -69,8 +69,11 @@ def register_operation_record_middleware(app: FastAPI):
             return RestfulResponse.error("系统异常，请联系管理员", code=Status.HTTP_500)
 
         start_time = time.time()
-        body_params = await request.body()
-        body_params = body_params.decode("utf-8", errors="ignore")
+        # multipart/form-data 类型数据不保存
+        if request.headers.get("content-type") and "multipart/form-data" in request.headers.get("content-type"):
+            body_params = ""
+        else:
+            body_params = (await request.body()).decode("utf-8", errors="ignore")
         response = await call_next(request)
         route = request.scope.get("route")
         if (
@@ -130,18 +133,3 @@ def register_demo_env_middleware(app: FastAPI):
             elif path not in settings.demo.DEMO_WHITE_LIST_PATH:
                 return RestfulResponse.error("演示环境，禁止操作")
         return await call_next(request)
-
-
-def register_jwt_refresh_middleware(app: FastAPI):
-    """
-    JWT刷新中间件
-    :param app:
-    :return:
-    """
-
-    @app.middleware("http")
-    async def jwt_refresh_middleware(request: Request, call_next):
-        response = await call_next(request)
-        refresh = request.scope.get("if-refresh", 0)
-        response.headers["if-refresh"] = str(refresh)
-        return response

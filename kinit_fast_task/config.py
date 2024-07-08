@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     在多种方式指定同一个设置字段的值的情况下，选定值的确定顺序如下（按优先级降序排列）：
 
     1. init_settings：传递给 BaseSettings 类构造函数的参数
-    2. env_settings：环境变量，例如上述的 my_prefix_special_function。
-    3. dotenv_settings：从 dotenv（.env）文件加载的变量。
+    2. dotenv_settings：从 dotenv（.env）文件加载的变量。
+    3. env_settings：环境变量，例如上述的 my_prefix_special_function。
     4. settings_cls：BaseSettings 模型的默认字段值。
     """
 
@@ -45,7 +45,7 @@ class Settings(BaseSettings):
         dotenv_settings: PydanticBaseSettingsSource,
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
-        return init_settings, env_settings, dotenv_settings
+        return init_settings, dotenv_settings, env_settings
 
 
 class DemoSettings(Settings):
@@ -98,24 +98,44 @@ class AuthSettings(Settings):
     ACCESS_TOKEN_CACHE_MINUTES: int = 30
 
 
-class OSSSettings(Settings):
+class StorageSettings(Settings):
     """
-    阿里云 OSS 配置
+    文件存储配置
     """
 
-    # 阿里云对象存储OSS配置
-    # 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。 # noqa: E501
-    # yourEndpoint填写Bucket所在地域对应的Endpoint。
-    # 以华东1（杭州）为例，Endpoint填写为 https://oss-cn-hangzhou.aliyuncs.com。
-    #  *  [accessKeyId] {String}：通过阿里云控制台创建的AccessKey。
-    #  *  [accessKeySecret] {String}：通过阿里云控制台创建的AccessSecret。
-    #  *  [bucket] {String}：通过控制台或PutBucket创建的bucket。
-    #  *  [endpoint] {String}：bucket所在的区域， 默认oss-cn-hangzhou。
-    ACCESS_KEY_ID: str
-    ACCESS_KEY_SECRET: str
-    ENDPOINT: str
-    BUCKET: str
-    BASE_URL: str
+    """
+    阿里云对象存储OSS配置
+    OSS_ENABLE: 是否启用 OSS 文件存储功能
+    OSS_ACCESS_KEY_ID: 通过阿里云控制台创建的AccessKey
+    OSS_ACCESS_KEY_SECRET: 通过阿里云控制台创建的AccessSecret
+    OSS_ENDPOINT: bucket所在的区域， 默认oss-cn-hangzhou
+    OSS_BUCKET: 通过控制台或PutBucket创建的bucket
+    OSS_BASE_URL: 填写OSS_ENDPOINT对应访问的URL, 以华东1（杭州）为例，Base URL 填写为 https://oss-cn-hangzhou.aliyuncs.com
+    """  # noqa: E501
+    OSS_ENABLE: bool = False  # 是否开启 OSS 文件存储功能
+    OSS_ACCESS_KEY_ID: str = "accessKeyId"
+    OSS_ACCESS_KEY_SECRET: str = "accessKeySecret"
+    OSS_ENDPOINT: str = "endpoint"
+    OSS_BUCKET: str = "bucket"
+    OSS_BASE_URL: str = "baseUrl"
+
+    """
+    挂载静态目录，并添加路由访问，此路由不会在接口文档中显示
+    LOCAL_ENABLE：是否启用静态目录访问
+    LOCAL_BASE_URL：路由访问
+    LOCAL_PATH：静态文件目录绝对路径
+    官方文档：https://fastapi.tiangolo.com/tutorial/static-files/
+    """
+    LOCAL_ENABLE: bool = True
+    LOCAL_BASE_URL: str = "/media"
+    LOCAL_PATH: str = str(_BASE_PATH / "static")
+
+    """
+    挂载系统临时文件目录, 只用于存储临时文件, 不允许外部访问
+    TEMP_DIR：临时文件目录绝对路径
+    """
+    TEMP_ENABLE: bool = True
+    TEMP_PATH: str = str(_BASE_PATH / "temp")
 
 
 class DBSettings(Settings):
@@ -132,13 +152,13 @@ class DBSettings(Settings):
 
     # Redis 数据库配置
     # 格式："redis://:密码@地址:端口/数据库名称"
-    REDIS_DB_ENABLE: bool
-    REDIS_DB_URL: RedisDsn
+    REDIS_DB_ENABLE: bool = False
+    REDIS_DB_URL: RedisDsn = "redis://:admin@127.0.0.1:6379/0"
 
     # MongoDB 数据库配置
     # 格式：mongodb://用户名:密码@地址:端口/?authSource=数据库名称
-    MONGO_DB_ENABLE: bool
-    MONGO_DB_URL: MongoDsn
+    MONGO_DB_ENABLE: bool = False
+    MONGO_DB_URL: MongoDsn = "mongodb://admin:admin@127.0.0.1:27017/?authSource=test"
 
 
 class SystemSettings(Settings):
@@ -154,20 +174,6 @@ class SystemSettings(Settings):
     SERVER_PORT: int
 
     PROJECT_NAME: str = "kinit_fast_task"
-
-    # 挂载临时文件目录，并添加路由访问，此路由不会在接口文档中显示
-    # TEMP_DIR：临时文件目录绝对路径
-    # 官方文档：https://fastapi.tiangolo.com/tutorial/static-files/
-    TEMP_PATH: str = str(_BASE_PATH / "temp")
-
-    # 挂载静态目录，并添加路由访问，此路由不会在接口文档中显示
-    # STATIC_ENABLE：是否启用静态目录访问
-    # STATIC_URL：路由访问
-    # STATIC_PATH：静态文件目录绝对路径
-    # 官方文档：https://fastapi.tiangolo.com/tutorial/static-files/
-    STATIC_ENABLE: bool = True
-    STATIC_URL: str = "/media"
-    STATIC_PATH: str = str(_BASE_PATH / "static")
 
     # 是否将日志打印在控制台
     LOG_CONSOLE_OUT: bool = True
@@ -216,9 +222,7 @@ class SystemSettings(Settings):
         # 操作日志记录中间件 - 保存入 MongoDB 数据库
         f"{PROJECT_NAME}.core.middleware.register_operation_record_middleware" if OPERATION_LOG_RECORD else None,
         # 演示环境中间件
-        f"{PROJECT_NAME}.core.middleware.register_demo_env_middleware" if DemoSettings().DEMO_ENV else None,
-        # 刷新 JWT 标记中间件
-        f"{PROJECT_NAME}.core.middleware.register_jwt_refresh_middleware",
+        f"{PROJECT_NAME}.core.middleware.register_demo_env_middleware" if DemoSettings().DEMO_ENV else None
     ]
 
 
@@ -262,8 +266,8 @@ class GlobalSettings(BaseSettings):
     auth: AuthSettings = AuthSettings()
     # 项目关联数据库配置
     db: DBSettings = DBSettings()
-    # 阿里云 OSS 配置
-    oss: OSSSettings = OSSSettings()
+    # 文件存储配置
+    storage: StorageSettings = StorageSettings()
     # 系统基础配置
     system: SystemSettings = SystemSettings()
     # 系统路由

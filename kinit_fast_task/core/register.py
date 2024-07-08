@@ -50,7 +50,7 @@ def register_static(app: FastAPI):
     """
     挂载静态文件目录
     """
-    app.mount(settings.system.STATIC_URL, app=StaticFiles(directory=settings.system.STATIC_PATH))
+    app.mount(settings.storage.LOCAL_BASE_URL, app=StaticFiles(directory=settings.storage.LOCAL_PATH))
 
 
 def register_router(app: FastAPI):

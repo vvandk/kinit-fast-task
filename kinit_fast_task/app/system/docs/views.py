@@ -23,8 +23,8 @@ def load_system_routes(app: FastAPI):
             openapi_url=request.app.openapi_url,
             title=f"{request.app.title} - Swagger UI",
             oauth2_redirect_url=request.app.swagger_ui_oauth2_redirect_url,
-            swagger_js_url=f"{settings.system.STATIC_URL}/swagger_ui/swagger-ui-bundle.js",
-            swagger_css_url=f"{settings.system.STATIC_URL}/swagger_ui/swagger-ui.css",
+            swagger_js_url=f"{settings.storage.LOCAL_BASE_URL}/swagger_ui/swagger-ui-bundle.js",
+            swagger_css_url=f"{settings.storage.LOCAL_BASE_URL}/swagger_ui/swagger-ui.css",
         )
 
     @app.get("/swagger-redirect", summary="Swagger UI Redirect", include_in_schema=False)
@@ -36,5 +36,5 @@ def load_system_routes(app: FastAPI):
         return get_redoc_html(
             openapi_url=request.app.openapi_url,
             title=f"{request.app.title} - ReDoc",
-            redoc_js_url=f"{settings.system.STATIC_URL}/redoc_ui/redoc.standalone.js",
+            redoc_js_url=f"{settings.storage.LOCAL_BASE_URL}/redoc_ui/redoc.standalone.js",
         )

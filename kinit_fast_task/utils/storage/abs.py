@@ -22,26 +22,26 @@ class AbstractStorage(ABC):
     AUDIO_ACCEPT = ["audio/wav", "audio/mp3", "audio/m4a", "audio/wma", "audio/ogg", "audio/mpeg", "audio/x-wav"]
     ALL_ACCEPT = [*IMAGE_ACCEPT, *VIDEO_ACCEPT, *AUDIO_ACCEPT]
 
-    async def save_image(self, file: UploadFile, path: str | None = None, max_size: int = 10) -> str:
+    async def save_image(self, file: UploadFile, *, path: str | None = None, max_size: int = 10) -> str:
         """
         保存图片文件
         """
-        return await self.save(file, path, accept=self.IMAGE_ACCEPT, max_size=max_size)
+        return await self.save(file, path=path, accept=self.IMAGE_ACCEPT, max_size=max_size)
 
-    async def save_audio(self, file: UploadFile, path: str | None = None, max_size: int = 50) -> str:
+    async def save_audio(self, file: UploadFile, *, path: str | None = None, max_size: int = 50) -> str:
         """
         保存音频文件
         """
-        return await self.save(file, path, accept=self.AUDIO_ACCEPT, max_size=max_size)
+        return await self.save(file, path=path, accept=self.AUDIO_ACCEPT, max_size=max_size)
 
-    async def save_video(self, file: UploadFile, path: str | None = None, max_size: int = 50) -> str:
+    async def save_video(self, file: UploadFile, *, path: str | None = None, max_size: int = 50) -> str:
         """
         保存视频文件
         """
-        return await self.save(file, path, accept=self.VIDEO_ACCEPT, max_size=max_size)
+        return await self.save(file, path=path, accept=self.VIDEO_ACCEPT, max_size=max_size)
 
     @abstractmethod
-    async def save(self, file: UploadFile, path: str | None = None, *, accept: list = None, max_size: int = 50) -> str:
+    async def save(self, file: UploadFile, *, path: str | None = None, accept: list = None, max_size: int = 50) -> str:
         """
         保存通用文件
 
@@ -53,7 +53,7 @@ class AbstractStorage(ABC):
         """
 
     @classmethod
-    async def validate_file(cls, file: UploadFile, max_size: int = None, mime_types: list = None) -> bool:
+    async def validate_file(cls, file: UploadFile, *, max_size: int = None, mime_types: list = None) -> bool:
         """
         验证文件是否符合格式
 
@@ -70,7 +70,7 @@ class AbstractStorage(ABC):
             await file.seek(0)
         if mime_types:
             if file.content_type not in mime_types:
-                raise CustomException(f"上传文件格式错误，只支持 {'/'.join(mime_types)} 格式!")
+                raise CustomException(f"上传文件格式错误，只支持 {','.join(mime_types)} 格式!")
         return True
 
     @classmethod
