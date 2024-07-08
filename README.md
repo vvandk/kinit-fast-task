@@ -62,7 +62,6 @@ kinit-fast-task
 │   ├── core                          # 系统核心组件
 │   │   ├── event.py                  # 系统事件
 │   │   ├── exception.py              # 系统异常处理
-│   │   ├── logger.py                 # 系统日志处理
 │   │   ├── middleware.py             # 系统中间件
 │   │   ├── register.py               # 系统注册项
 │   │   └── types.py                  # 全局数据类型
@@ -281,7 +280,7 @@ ruff check --fix
 
 - [x] App 代码生成工具
 
-- [ ] 文件管理功能模块，通过工厂模式支持：`本地 static`, `本地 temp`， `阿里云 OSS`，`七牛云`
+- [x] 文件管理功能模块，通过工厂模式支持：`本地 static`, `本地 temp`， `阿里云 OSS`，`七牛云`
 
   1. `本地 static`：需要持久化存储的文件，比如附件，导入文件等
   2. `本地 temp`：临时存储的文件，比如临时生成的文件，临时导出的文件，可定期删除的文件
