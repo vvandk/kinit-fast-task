@@ -91,7 +91,7 @@ def create_app():
     register_system_router(_app)
 
     uvicorn_logger.info(f"Load API Number：{len(_app.routes)}, Custom Add Number：{len(_app.routes) - 5}")
-    uvicorn_logger.info(f"Load APPS：{settings.router.APPS}")
+    uvicorn_logger.info(f"Load APPS ({len(settings.router.APPS)})：{settings.router.APPS}")
     uvicorn_logger.info(f"Load APPS Path：{settings.router.APPS_PATH}")
 
     return _app

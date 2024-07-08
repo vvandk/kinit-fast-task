@@ -108,11 +108,11 @@ class StorageSettings(Settings):
     OSS_ENABLE: 是否启用 OSS 文件存储功能
     OSS_ACCESS_KEY_ID: 通过阿里云控制台创建的AccessKey
     OSS_ACCESS_KEY_SECRET: 通过阿里云控制台创建的AccessSecret
-    OSS_ENDPOINT: bucket所在的区域， 默认oss-cn-hangzhou
+    OSS_ENDPOINT: 填写Bucket所在地域对应的Endpoint, 以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com
     OSS_BUCKET: 通过控制台或PutBucket创建的bucket
-    OSS_BASE_URL: 填写OSS_ENDPOINT对应访问的URL, 以华东1（杭州）为例，Base URL 填写为 https://oss-cn-hangzhou.aliyuncs.com
+    OSS_BASE_URL: 填写OSS_ENDPOINT对应访问的URL
     """  # noqa: E501
-    OSS_ENABLE: bool = False  # 是否开启 OSS 文件存储功能
+    OSS_ENABLE: bool = True  # 是否开启 OSS 文件存储功能
     OSS_ACCESS_KEY_ID: str = "accessKeyId"
     OSS_ACCESS_KEY_SECRET: str = "accessKeySecret"
     OSS_ENDPOINT: str = "endpoint"
