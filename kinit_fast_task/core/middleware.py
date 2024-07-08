@@ -118,8 +118,6 @@ def register_operation_record_middleware(app: FastAPI):
 def register_demo_env_middleware(app: FastAPI):
     """
     演示环境中间件
-    :param app:
-    :return:
     """
 
     @app.middleware("http")
