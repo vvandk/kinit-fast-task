@@ -14,7 +14,6 @@ from kinit_fast_task.config import settings
 
 
 class LocalStorage(AbstractStorage):
-
     async def save(self, file: UploadFile, *, path: str | None = None, accept: list = None, max_size: int = 50) -> str:
         """
         保存通用文件

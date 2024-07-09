@@ -91,12 +91,7 @@ class AppGenerate:
         return json_config
 
     def json_to_code(
-        self,
-        *,
-        json_config_file: str = None,
-        json_config: dict = None,
-        is_write: bool = False,
-        overwrite: bool = False
+        self, *, json_config_file: str = None, json_config: dict = None, is_write: bool = False, overwrite: bool = False
     ) -> None:
         """
         基于 JSON 配置文件生成代码
@@ -131,21 +126,15 @@ class AppGenerate:
             self.task_log.info("2. ruff check --fix")
             self.task_log.info("如若使用还需进行以下两步操作：")
             migrate_command = "python main.py migrate"
+            model_class = gc.json_config.model.class_name
             self.task_log.info(
-                f"1. 请确认 {gc.json_config.model.class_name} 数据表已完成迁移至数据库, 若还没迁移, 可执行：{migrate_command} 迁移命令！"
-                # noqa E501
+                f"1. 请确认 {model_class} 数据表已完成迁移至数据库, 若还没迁移, 可执行：{migrate_command} 迁移命令！"
             )
             self.task_log.info(f"2. 请确认在 config.py:RouterSettings.APPS 配置中添加 {gc.json_config.app_name} 路由！")
         self.task_log.end()
 
     def model_to_code(
-        self,
-        *,
-        model_class_name: str,
-        app_name: str,
-        app_desc: str,
-        write_only: bool = False,
-        overwrite: bool = False
+        self, *, model_class_name: str, app_name: str, app_desc: str, write_only: bool = False, overwrite: bool = False
     ) -> None:
         """
         基于单个 model 生成代码
@@ -177,9 +166,5 @@ if __name__ == "__main__":
     # app.json_to_code(json_config_file="role_data.json", is_write=True, overwrite=False)
 
     app.model_to_code(
-        model_class_name="AuthTestModel",
-        app_name="auth_test",
-        app_desc="测试",
-        write_only=True,
-        overwrite=True
+        model_class_name="AuthTestModel", app_name="auth_test", app_desc="测试", write_only=True, overwrite=True
     )

@@ -66,7 +66,7 @@ class ViewGenerate(GenerateBase):
             ],
             f"{self.project_name}.db.database_factory": ["DBFactory"],
             f"{self.project_name}.app.cruds.{crud_file_name}": [self.json_config.crud.class_name],
-            f"{self.project_name}.app.schemas": [schema_file_name],
+            f"{self.project_name}.app.schemas": [schema_file_name, "DeleteSchema"],
             ".params": ["PageParams"],
         }
         return modules
@@ -91,13 +91,13 @@ class ViewGenerate(GenerateBase):
         base_code += f'\nasync def create(data: {create_schema}, {session}):'
         base_code += f'\n\treturn RestfulResponse.success(await {crud}(session).create_data(data=data))\n'
 
-        base_code += f'\n\n@router.put("/update", response_model=ResponseSchema[str], summary="更新{zh_name}")'
+        base_code += f'\n\n@router.post("/update", response_model=ResponseSchema[str], summary="更新{zh_name}")'
         base_code += f'\nasync def update(data_id: int = Body(..., description="{zh_name}编号"), data: {update_schema}, {session}):'
         base_code += f'\n\treturn RestfulResponse.success(await {crud}(session).update_data(data_id, data))\n'
 
-        base_code += f'\n\n@router.delete("/delete", response_model=ResponseSchema[str], summary="批量删除{zh_name}")'
-        base_code += f'\nasync def delete(data_ids: list[int] = Body(..., description="{zh_name}编号列表"), {session}):'
-        base_code += f'\n\tawait {crud}(session).delete_datas(ids=data_ids)'
+        base_code += f'\n\n@router.post("/delete", response_model=ResponseSchema[str], summary="批量删除{zh_name}")'
+        base_code += f'\nasync def delete(data: DeleteSchema = Body(..., description="{zh_name}编号列表"), {session}):'
+        base_code += f'\n\tawait {crud}(session).delete_datas(ids=data.data_ids)'
         base_code += '\n\treturn RestfulResponse.success("删除成功")\n'
 
         base_code += f'\n\n@router.get("/list/query", response_model=PageResponseSchema[list[{simple_out_schema}]], summary="获取{zh_name}列表")'

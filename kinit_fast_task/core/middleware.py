@@ -78,7 +78,7 @@ def register_operation_record_middleware(app: FastAPI):
         route = request.scope.get("route")
         if (
             request.method not in settings.system.OPERATION_RECORD_METHOD
-            or route.name in settings.system.IGNORE_OPERATION_FUNCTION
+            or route.path in settings.system.IGNORE_OPERATION_ROUTER
         ):
             return response
         process_time = time.time() - start_time

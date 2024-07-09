@@ -3,10 +3,8 @@
 # @File           : config.py
 # @IDE            : PyCharm
 # @Desc           : 项目全局配置信息
-from collections.abc import Callable
 from pathlib import Path
 
-from fastapi.security import OAuth2PasswordBearer
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
 from pydantic import PostgresDsn, RedisDsn, MongoDsn
 from ipaddress import IPv4Address
@@ -188,9 +186,9 @@ class SystemSettings(Settings):
     # 是否开启每次操作日志记录到MongoDB数据库
     OPERATION_LOG_RECORD: bool = True
     # 只记录包括的请求方式操作到MongoDB数据库
-    OPERATION_RECORD_METHOD: list[str] = ["POST", "PUT", "DELETE"]
+    OPERATION_RECORD_METHOD: list[str] = ["POST"]
     # 忽略的操作接口函数名称, 列表中的函数名称不会被记录到操作日志中
-    IGNORE_OPERATION_FUNCTION: list[str] = []
+    IGNORE_OPERATION_ROUTER: list[str] = []
 
     # 中间件配置
     MIDDLEWARES: list[str | None] = [
@@ -199,7 +197,7 @@ class SystemSettings(Settings):
         # 操作日志记录中间件 - 保存入 MongoDB 数据库
         f"{PROJECT_NAME}.core.middleware.register_operation_record_middleware" if OPERATION_LOG_RECORD else None,
         # 演示环境中间件
-        f"{PROJECT_NAME}.core.middleware.register_demo_env_middleware" if DemoSettings().DEMO_ENV else None
+        f"{PROJECT_NAME}.core.middleware.register_demo_env_middleware" if DemoSettings().DEMO_ENV else None,
     ]
 
 

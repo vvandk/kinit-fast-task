@@ -89,7 +89,7 @@ async def one_query(
     return RestfulResponse.success(data=data)
 
 
-@router.put("/stop/task/update", response_model=ResponseSchema[str], summary="暂停任务")
+@router.post("/stop/task/update", response_model=ResponseSchema[str], summary="暂停任务")
 async def stop_task_update(
     data_id: str = Query(..., description="任务编号"),
     session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
@@ -98,7 +98,7 @@ async def stop_task_update(
     return RestfulResponse.success(data=data)
 
 
-@router.put("/start/task/update", response_model=ResponseSchema[str], summary="开启任务")
+@router.post("/start/task/update", response_model=ResponseSchema[str], summary="开启任务")
 async def start_task_update(
     data_id: str = Query(..., description="任务编号"),
     session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),

@@ -94,7 +94,7 @@ async def apscheduler_example_create(task_number: Literal["01", "02", "03"] = Qu
     return RestfulResponse.success()
 
 
-@router.delete(
+@router.post(
     "/apscheduler/delete/example/delete",
     response_model=ResponseSchema[str],
     summary="APScheduler 实例直接调用示例, 删除工作任务",

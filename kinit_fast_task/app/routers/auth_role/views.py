@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, Body, Query
 from kinit_fast_task.db import DBFactory
 from kinit_fast_task.utils.response import RestfulResponse, ResponseSchema, PageResponseSchema
 from kinit_fast_task.app.cruds.auth_role_crud import AuthRoleCRUD
-from kinit_fast_task.app.schemas import auth_role_schema
+from kinit_fast_task.app.schemas import auth_role_schema, DeleteSchema
 from .params import PageParams
 
 router = APIRouter(prefix="/auth/role", tags=["角色管理"])
@@ -53,7 +53,7 @@ async def batch_create(
     return RestfulResponse.success(await AuthRoleCRUD(session).create_datas(datas))
 
 
-@router.put("/update", response_model=ResponseSchema[str], summary="更新角色")
+@router.post("/update", response_model=ResponseSchema[str], summary="更新角色")
 async def update(
     data_id: int = Body(..., description="角色编号"),
     data: auth_role_schema.AuthRoleUpdateSchema = Body(..., description="更新内容"),
@@ -62,12 +62,12 @@ async def update(
     return RestfulResponse.success(await AuthRoleCRUD(session).update_data(data_id, data))
 
 
-@router.delete("/delete", response_model=ResponseSchema[str], summary="批量删除角色")
+@router.post("/delete", response_model=ResponseSchema[str], summary="批量删除角色")
 async def delete(
-    data_ids: list[int] = Body(..., description="角色编号列表"),
+    data: DeleteSchema = Body(..., description="角色编号列表"),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
-    await AuthRoleCRUD(session).delete_datas(ids=data_ids)
+    await AuthRoleCRUD(session).delete_datas(ids=data.data_ids)
     return RestfulResponse.success("删除成功")
 
 

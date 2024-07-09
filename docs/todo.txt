@@ -13,3 +13,4 @@
 7. 日志记录器功能同步
 
 8. celery 功能加过来，考虑
+确定 celery 更加强大, 将当前的 apscheduler 归档至 apscheduler 分支, 主分支切换为 celery 任务框架

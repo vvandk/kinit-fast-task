@@ -86,11 +86,7 @@ def generate(
 
     ag = AppGenerate(verbose=False)
     ag.model_to_code(
-        model_class_name=model,
-        app_name=app_name,
-        app_desc=app_desc,
-        write_only=write_only,
-        overwrite=overwrite
+        model_class_name=model, app_name=app_name, app_desc=app_desc, write_only=write_only, overwrite=overwrite
     )
 
 

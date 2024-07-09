@@ -6,7 +6,7 @@
 
 from typing import Any
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 def add_schema_extra(schema: dict[str, Any]) -> None:
@@ -44,3 +44,7 @@ class BaseSchema(BaseModel):
         """
         default_dict = self.model_dump()
         return jsonable_encoder(default_dict)
+
+
+class DeleteSchema(BaseSchema):
+    data_ids: list[int] = Field(..., description="需要删除的数据编号列表")

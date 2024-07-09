@@ -11,7 +11,7 @@ from sqlalchemy.orm import selectinload
 from kinit_fast_task.db import DBFactory
 from kinit_fast_task.utils.response import RestfulResponse, ResponseSchema, PageResponseSchema
 from kinit_fast_task.app.cruds.auth_user_crud import AuthUserCRUD
-from kinit_fast_task.app.schemas import auth_user_schema
+from kinit_fast_task.app.schemas import auth_user_schema, DeleteSchema
 from kinit_fast_task.app.models.auth_user_model import AuthUserModel
 from .params import PageParams
 from .services import UserService
@@ -41,7 +41,7 @@ async def create(
     return RestfulResponse.success(await AuthUserCRUD(session).create_data(data=data))
 
 
-@router.put("/update", response_model=ResponseSchema[str], summary="更新用户")
+@router.post("/update", response_model=ResponseSchema[str], summary="更新用户")
 async def update(
     data_id: int = Body(..., description="用户编号"),
     data: auth_user_schema.AuthUserUpdateSchema = Body(..., description="更新内容"),
@@ -50,12 +50,12 @@ async def update(
     return RestfulResponse.success(await AuthUserCRUD(session).update_data(data_id, data))
 
 
-@router.delete("/delete", response_model=ResponseSchema[str], summary="批量删除用户")
+@router.post("/delete", response_model=ResponseSchema[str], summary="批量删除用户")
 async def delete(
-    data_ids: list[int] = Body(..., description="用户编号列表"),
+    data: DeleteSchema = Body(..., description="用户编号列表"),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
-    await AuthUserCRUD(session).delete_datas(ids=data_ids)
+    await AuthUserCRUD(session).delete_datas(ids=data.data_ids)
     return RestfulResponse.success("删除成功")
 
 

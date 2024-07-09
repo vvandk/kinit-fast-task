@@ -9,7 +9,6 @@ from kinit_fast_task.utils.storage import AbstractStorage
 
 
 class KodoStorage(AbstractStorage):
-
     async def save(self, file: UploadFile, *, path: str | None = None, accept: list = None, max_size: int = 50) -> str:
         """
         保存通用文件

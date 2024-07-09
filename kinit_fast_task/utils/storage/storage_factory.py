@@ -11,11 +11,9 @@ from kinit_fast_task.utils.singleton import Singleton
 from kinit_fast_task.utils.storage import LocalStorage
 from kinit_fast_task.utils.storage import OSSStorage
 from kinit_fast_task.utils.storage import TempStorage
-from kinit_fast_task.utils.storage import KodoStorage
 
 
 class StorageFactory(metaclass=Singleton):
-
     _config_loader: dict[str, AbstractStorage] = {}
 
     @classmethod
