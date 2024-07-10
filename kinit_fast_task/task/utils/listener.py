@@ -71,4 +71,5 @@ async def before_job_execution(event: JobExecutionEvent):
         log.error(f"任务编号：{event.job_id}，报错：{e}")
     except bson.errors.InvalidId:
         result["exception"] = "任务列表中无该任务编号"
+        log.error(f"任务编号：{event.job_id}，报错：任务列表中无该任务编号")
     await SchedulerTaskRecordCURD().create_data(result)
