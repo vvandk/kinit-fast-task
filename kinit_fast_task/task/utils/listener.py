@@ -56,6 +56,12 @@ async def before_job_execution(event: JobExecutionEvent):
         "retval": json.dumps(event.retval),
         "exception": json.dumps(event.exception),
         "traceback": json.dumps(event.traceback),
+        "job_class": None,
+        "job_params": None,
+        "name": "null",
+        "group": "null",
+        "exec_strategy": None,
+        "expression": None,
     }
 
     try:
