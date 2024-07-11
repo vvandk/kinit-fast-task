@@ -1,4 +1,4 @@
-import uuid
+import sys
 from pathlib import Path
 from typing import Any
 from loguru import logger
@@ -11,10 +11,32 @@ class TaskLogger:
     任务日志
     """
 
-    def __init__(self, verbose: bool = False) -> None:
-        self.task_log_id = str(uuid.uuid4())
+    def __init__(self, log_filename: str, verbose: bool = False) -> None:
+        self._log_filename = log_filename
+        self._log_file_path = None
         self.verbose = verbose
         self._logger = logger
+
+        self._configure_logging()
+
+    def _configure_logging(self):
+        """
+        配置日志文件的存储和轮转。
+        """
+
+        # 添加日志文件路径
+        self._log_file_path = Path(settings.system.LOG_PATH) / self._log_filename
+
+        self._logger.add(
+            self._log_file_path,  # 日志文件路径
+            rotation="5 MB",  # 当日志文件达到该大小时，将切换到一个新的日志文件
+            retention="3 days",  # 日志保留期限
+            enqueue=True,  # 设置为True，日志消息会被放入队列中，异步写入文件，这样可以提高程序性能
+            encoding="UTF-8",  # 日志文件的编码格式
+            level="DEBUG",  # 设置日志级别为DEBUG，意味着DEBUG及以上级别的日志会被写入此文件
+            mode="a",  # 如果文件已经存在，则追加内容
+            filter=lambda record: record["extra"].get("filename") == self._log_filename
+        )
 
     def _log(self, level: str, *args: Any, is_verbose: bool = False, depth: int = 0) -> None:
         """
@@ -32,12 +54,11 @@ class TaskLogger:
             调用堆栈的深度，用于调整日志消息的来源
         """
         msg = " ".join(map(str, args))
-        msg = f"{self.task_log_id} - {msg}"
         if is_verbose:
             if self.verbose:
-                self._logger.opt(depth=depth + 1).log(level, msg)
+                self._logger.bind(filename=self._log_filename).opt(depth=depth + 1).log(level, msg)
         else:
-            self._logger.opt(depth=depth + 1).log(level, msg)
+            self._logger.bind(filename=self._log_filename).opt(depth=depth + 1).log(level, msg)
 
     def debug(self, *args: Any, is_verbose: bool = False, depth: int = 0) -> None:
         """
@@ -129,6 +150,20 @@ class TaskLogger:
         """
         self._log("CRITICAL", *args, is_verbose=is_verbose, depth=depth + 1)
 
+    def start(self, msg: str = "BEGIN", depth: int = 0) -> None:
+        """
+        输出任务开始信息
+
+        Parameters
+        ----------
+        msg: str
+            开始信息
+        depth: int
+            调用堆栈的深度，用于调整日志消息的来源
+        """
+        self._log("INFO", "=======", depth=depth + 1)
+        self._log("INFO", msg, depth=depth + 1)
+
     def end(self, msg: str = None, depth: int = 0) -> None:
         """
         输出任务结束信息
@@ -175,64 +210,44 @@ class LoguruLogger(metaclass=Singleton):
         初始化日志配置
         """
         self._log_file_path = None
-        self._verbose = False
-        self._logger = logger
+        self._task_loaders = {}
 
-    def _configure_logging(self, log_file_path: str | Path) -> None:
+    def _configure_logging(self) -> None:
         """
         配置日志文件的存储和轮转。
         """
+        # 确保日志目录存在, 不存在则创建
+        self._log_file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        self._logger.add(
-            log_file_path,  # 日志文件路径
+        logger.add(
+            self._log_file_path,  # 日志文件路径
             rotation="5 MB",  # 当日志文件达到该大小时，将切换到一个新的日志文件
             retention="3 days",  # 日志保留期限
             enqueue=True,  # 设置为True，日志消息会被放入队列中，异步写入文件，这样可以提高程序性能
             encoding="UTF-8",  # 日志文件的编码格式
             level="DEBUG",  # 设置日志级别为DEBUG，意味着DEBUG及以上级别的日志会被写入此文件
             mode="a",  # 如果文件已经存在，则追加内容
+            filter=lambda record: record["extra"].get("filename") == self._log_file_path.stem
         )
         # 自定义格式
         # format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {message}"
 
-    def remove_console(self):
-        """
-        移除默认的控制台输出
-        """
-        try:
-            self._logger.remove(0)
-        except ValueError:
-            pass
-
-    def get_log_path(self) -> Path:
-        """
-        获取日志文件路径
-        """
-        return self._log_file_path
-
-    def run(self, log_file_path: str | None = None, console: bool = settings.system.LOG_CONSOLE_OUT):
+    def run(self):
         """
         主入口程序
-
-        Parameters
-        ----------
-        log_file_path: str
-            日志文件存储的地址
-        console: bool, optional
-            是否将日志输出到控制台
         """
-        if log_file_path is None:
-            log_file_path = settings.system.LOG_PATH
 
-        self.remove_console() if not console else None
+        # 禁用全局 logger 的默认处理器
+        logger.remove()
 
-        self._log_file_path = Path(log_file_path)
+        if settings.system.LOG_CONSOLE_OUT:
+            # 添加控制台输出
+            logger.add(sys.stdout, level="DEBUG")
 
-        # 确保日志目录存在, 不存在则创建
-        self._log_file_path.parent.mkdir(parents=True, exist_ok=True)
+        self._log_file_path = Path(settings.system.REQUEST_LOG_FILE_PATH)
 
         # 配置日志文件
-        self._configure_logging(self._log_file_path)
+        self._configure_logging()
 
     def _log(self, level: str, *args: Any, depth: int = 0) -> None:
         """
@@ -242,7 +257,7 @@ class LoguruLogger(metaclass=Singleton):
         :param depth: 调用堆栈的深度，用于调整日志消息的来源
         """
         msg = " ".join(map(str, args))
-        self._logger.opt(depth=depth + 1).log(level, msg)
+        logger.bind(filename=self._log_file_path.stem).opt(depth=depth + 1).log(level, msg)
 
     def debug(self, *args: Any, depth: int = 0) -> None:
         """
@@ -298,35 +313,56 @@ class LoguruLogger(metaclass=Singleton):
         """
         self._log("CRITICAL", *args, depth=depth + 1)
 
-    @staticmethod
-    def create_task(msg: str = "BEGIN", verbose: bool = False, depth: int = 0) -> TaskLogger:
+    def get_task_log(
+        self,
+        log_filename: str,
+        *,
+        msg: str = "BEGIN",
+        verbose: bool = False,
+        depth: int = 0
+    ) -> TaskLogger:
         """
-        输出任务开始信息
+        获取独立任务日志管理器
 
+        如果文件名称已存在任务日志加载器(_task_loaders)中，则直接返回对应的任务日志实例，反之则创建后返回
+
+        :param log_filename: 日志文件名称
         :param msg: title
         :param verbose: 是否输出详细日志
         :param depth: 调用堆栈的深度，用于调整日志消息的来源
         """
-        _task_log = TaskLogger(verbose)
-        _task_log.info("=======", depth=depth + 1)
-        _task_log.info(msg, depth=depth + 1)
-        return _task_log
+        if log_filename in self._task_loaders:
+            task_log = self._task_loaders[log_filename]
+        else:
+            task_log = TaskLogger(log_filename=log_filename, verbose=verbose)
+            self._task_loaders[log_filename] = task_log
+            print("new")
+        return task_log
+
+    def remove_task_log(self, log_filename: str) -> None:
+        """
+        删除指定的任务日志管理器
+        """
+        if log_filename in self._task_loaders:
+            del self._task_loaders[log_filename]
 
 
 # 创建LoguruLogger实例，可以根据需要调整参数
 log = LoguruLogger()
 log.run()
 
-
 if __name__ == "__main__":
     log.debug("main, This is a debug message")
     log.info("main, This is an info message")
 
-    task_log = log.create_task(verbose=True)
-    task_log.debug("This is a debug message", is_verbose=True)
-    task_log.info("This is an info message")
-    task_log.success("This is a success message", is_verbose=True)
-    task_log.warning("This is a warning message")
-    task_log.error("This is an error message")
-    task_log.critical("This is a critical message")
-    task_log.end()
+    task_loger = log.get_task_log(log_filename="test.log", verbose=True)
+    task_loger.start()
+    task_loger.debug("This is a debug message", is_verbose=True)
+    task_loger.info("This is an info message")
+    task_loger.success("This is a success message", is_verbose=True)
+    log.remove_task_log(log_filename="test.log")
+    task_loger = log.get_task_log(log_filename="test.log", verbose=True)
+    task_loger.warning("This is a warning message")
+    task_loger.error("This is an error message")
+    task_loger.critical("This is a critical message")
+    task_loger.end()

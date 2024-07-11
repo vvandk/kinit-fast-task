@@ -160,7 +160,9 @@ class SystemSettings(Settings):
     # 是否将日志打印在控制台
     LOG_CONSOLE_OUT: bool = True
     # 日志目录地址
-    LOG_PATH: str = str(_BASE_PATH / "logs" / "requests.log")
+    LOG_PATH: str = str(_BASE_PATH / "logs")
+    # 请求日志文件地址
+    REQUEST_LOG_FILE_PATH: str = str(_BASE_PATH / "logs" / "requests.log")
 
     """
     跨域解决
