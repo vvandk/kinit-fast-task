@@ -45,6 +45,3 @@ class BaseSchema(BaseModel):
         default_dict = self.model_dump()
         return jsonable_encoder(default_dict)
 
-
-class DeleteSchema(BaseSchema):
-    data_ids: list[int] = Field(..., description="需要删除的数据编号列表")

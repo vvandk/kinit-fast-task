@@ -19,9 +19,9 @@ class TaskRecordSchema(BaseSchema):
     traceback: str | None = Field(None, description="堆栈跟踪")
     name: str = Field(..., description="任务名称")
     group: str | None = Field(None, description="任务标签，任务组名")
-    job_class: str = Field(..., description="任务执行实体类")
-    job_params: DictStr = Field({}, description="任务执行实体类参数, dict 类型参数, 入参方式为：**kwargs")
-    exec_strategy: JobExecStrategy = Field(..., description="执行策略")
+    job_class: str | None = Field(..., description="任务执行实体类")
+    job_params: DictStr | None = Field({}, description="任务执行实体类参数, dict 类型参数, 入参方式为：**kwargs")
+    exec_strategy: JobExecStrategy | None = Field(..., description="执行策略")
     expression: str | None = Field(None, description="执行表达式, 一次任务可以不填")
 
 

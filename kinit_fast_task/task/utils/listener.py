@@ -10,6 +10,8 @@ import json
 
 import bson
 from apscheduler.events import JobExecutionEvent
+
+from kinit_fast_task.core import CustomException
 from kinit_fast_task.task.utils.scheduler_task_record import SchedulerTaskRecordCURD
 from kinit_fast_task.task.utils.scheduler_task_list import SchedulerTaskListCURD
 import pytz
@@ -32,7 +34,9 @@ def async_listener_decorator(async_func):
 
 
 async def before_job_execution(event: JobExecutionEvent):
-    # print("在执行定时任务前执行的代码...")
+    """
+    在执行定时任务完成后执行的代码...
+    """
     shanghai_tz = pytz.timezone("Asia/Shanghai")
     start_datetime: datetime.datetime = event.scheduled_run_time.astimezone(shanghai_tz)
     end_datetime = datetime.datetime.now(shanghai_tz)
@@ -73,9 +77,12 @@ async def before_job_execution(event: JobExecutionEvent):
         result["exec_strategy"] = task.exec_strategy
         result["expression"] = task.expression
     except ValueError as e:
-        result["exception"] = str(e)
-        log.error(f"任务编号：{event.job_id}，报错：{e}")
+        result["exception"] = f"任务已执行完成, 任务编号：{event.job_id}, 报错：{e}"
+        log.error(f"任务已执行完成, 任务编号：{event.job_id}, 报错：{e}")
     except bson.errors.InvalidId:
-        result["exception"] = "任务列表中无该任务编号"
-        log.error(f"任务编号：{event.job_id}，报错：任务列表中无该任务编号")
+        result["exception"] = "任务已执行完成, 任务列表中无该任务编号"
+        log.error(f"任务已执行完成, 任务编号：{event.job_id}，报错：任务列表中无该任务编号")
+    except CustomException as e:
+        result["exception"] = f"任务已执行完成, 获取执行任务详细信息出错, job_id： {event.job_id}, 报错: {e}"
+        log.error(f"任务已执行完成, 获取执行任务详细信息出错, job_id： {event.job_id}")
     await SchedulerTaskRecordCURD().create_data(result)

@@ -4,4 +4,5 @@
 # @IDE            : PyCharm
 # @Desc           : 描述信息
 
-from kinit_fast_task.app.schemas.base.base import DeleteSchema
+from kinit_fast_task.app.schemas.base.base import BaseSchema
+from kinit_fast_task.app.schemas.global_schema import DeleteSchema

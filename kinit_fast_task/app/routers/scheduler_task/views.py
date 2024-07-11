@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, Query
 from kinit_fast_task.app.cruds.base.mongo import ReturnType
 from kinit_fast_task.app.routers.scheduler_task.params import PageParams
 from kinit_fast_task.utils.response import RestfulResponse, ResponseSchema, PageResponseSchema
-from kinit_fast_task.app.schemas import scheduler_task_list_schema
+from kinit_fast_task.app.schemas import scheduler_task_list_schema, DeleteSchema
 from kinit_fast_task.app.cruds.scheduler_task_list_crud import SchedulerTaskListCURD
 
 router = APIRouter(prefix="/scheduler/task", tags=["通用调度任务管理"])
@@ -89,8 +89,8 @@ async def one_query(
     return RestfulResponse.success(data=data)
 
 
-@router.post("/stop/task/update", response_model=ResponseSchema[str], summary="暂停任务")
-async def stop_task_update(
+@router.post("/stop/update", response_model=ResponseSchema[str], summary="暂停任务")
+async def stop_task(
     data_id: str = Query(..., description="任务编号"),
     session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
 ):
@@ -98,10 +98,18 @@ async def stop_task_update(
     return RestfulResponse.success(data=data)
 
 
-@router.post("/start/task/update", response_model=ResponseSchema[str], summary="开启任务")
-async def start_task_update(
+@router.post("/start/update", response_model=ResponseSchema[str], summary="开启任务")
+async def start_task(
     data_id: str = Query(..., description="任务编号"),
     session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
 ):
     data = await SchedulerTaskListCURD(session).start_task(data_id)
     return RestfulResponse.success(data=data)
+
+
+@router.post("/delete", response_model=ResponseSchema[str], summary="删除任务")
+async def delete_task(
+    data_id: str = Query(..., description="需要删除的任务编号"),
+    session: AsyncIOMotorClientSession = Depends(DBFactory.get_instance("mongo").db_transaction_getter),
+):
+    return RestfulResponse.success(data=await SchedulerTaskListCURD(session).delete_task(data_id))

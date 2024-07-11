@@ -8,6 +8,7 @@
 from motor.motor_asyncio import AsyncIOMotorClientSession
 from kinit_fast_task.app.cruds.base.mongo import MongoCrud, ReturnType
 from kinit_fast_task.app.schemas import scheduler_task_list_schema
+from kinit_fast_task.core import CustomException
 from kinit_fast_task.task.schema import AddTask
 from kinit_fast_task.task.main import scheduled_task
 
@@ -39,8 +40,6 @@ class SchedulerTaskListCURD(MongoCrud):
     async def stop_task(self, data_id: str):
         """
         暂停任务
-        :param data_id: 任务编号
-        :return:
         """
         obj: scheduler_task_list_schema.TaskSimpleOutSchema = await self.get_data(
             data_id, v_return_type=ReturnType.SCHEMA
@@ -60,3 +59,15 @@ class SchedulerTaskListCURD(MongoCrud):
             task_data = AddTask(task_id=str(obj.inserted_id), **data.model_dump(exclude={"name", "is_active"}))
             await scheduled_task.add_job(task_data)
         return "任务添加成功"
+
+    async def delete_task(self, data_id: str) -> str:
+        """
+        删除任务
+        """
+        obj: scheduler_task_list_schema.TaskSimpleOutSchema = await self.get_data(
+            data_id, v_return_type=ReturnType.SCHEMA
+        )
+        if obj.is_active:
+            raise CustomException("请暂停任务后再删除！")
+        await self.delete_data(data_id)
+        return "任务删除成功"
