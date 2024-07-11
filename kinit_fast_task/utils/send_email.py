@@ -25,15 +25,13 @@ class EmailSender:
         self.password = password
         self.smtp_server = smtp_server
         self.smtp_port = smtp_port
-        self.server = self.__get_settings()
+        self.server = self.__login_server()
 
-    def __get_settings(self) -> smtplib.SMTP:
+    def __login_server(self) -> smtplib.SMTP:
         """
-        获取配置信息
-        :return:
+        登录至邮箱服务器
         """
-        server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-        server.starttls()
+        server = smtplib.SMTP_SSL(self.smtp_server, self.smtp_port)
         try:
             server.login(self.email, self.password)
             return server
