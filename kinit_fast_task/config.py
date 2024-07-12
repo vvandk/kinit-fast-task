@@ -164,6 +164,9 @@ class SystemSettings(Settings):
     # 请求日志文件地址
     REQUEST_LOG_FILE_PATH: str = str(_BASE_PATH / "logs" / "requests.log")
 
+    # 是否开启接口文档访问
+    API_DOCS_ENABLE: bool = True
+
     """
     跨域解决
     详细解释：https://cloud.tencent.com/developer/article/1886114

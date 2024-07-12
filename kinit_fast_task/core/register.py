@@ -68,7 +68,6 @@ def register_system_router(app: FastAPI):
     注册系统路由
     """
     from kinit_fast_task.app.system.docs import views as docs_views
-    # from kinit_fast_task.app.system.tools import views as tools_views
 
-    docs_views.load_system_routes(app)
-    # tools_views.load_system_routes(app)
+    if settings.system.API_DOCS_ENABLE:
+        docs_views.load_system_routes(app)

@@ -50,8 +50,12 @@ def create_app():
     server_address = f"http://{'127.0.0.1' if host == '0.0.0.0' else host}:{port}"
 
     serving_str = f"[dim]API Server URL:[/dim] [link]http://{host}:{port}[/link]"
-    serving_str += f"\n\n[dim]Swagger UI Docs:[/dim] [link]{server_address}/docs[/link]"
-    serving_str += f"\n\n[dim]Redoc HTML Docs:[/dim] [link]{server_address}/redoc[/link]"
+    if settings.system.API_DOCS_ENABLE:
+        serving_str += f"\n\n[dim]Swagger UI Docs:[/dim] [link]{server_address}/docs[/link]"
+        serving_str += f"\n\n[dim]Redoc HTML Docs:[/dim] [link]{server_address}/redoc[/link]"
+    else:
+        serving_str += f"\n\n[dim]Swagger UI Docs:[/dim] not enabled"
+        serving_str += f"\n\n[dim]Redoc HTML Docs:[/dim] not enabled"
 
     # 踩坑1：rich Panel 使用中文会导致边框对不齐的情况
     panel = Panel(
