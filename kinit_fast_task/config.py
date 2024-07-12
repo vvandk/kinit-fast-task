@@ -162,6 +162,9 @@ class SystemSettings(Settings):
     # 日志目录地址
     LOG_PATH: str = str(_BASE_PATH / "logs" / "requests.log")
 
+    # 是否开启接口文档访问
+    API_DOCS_ENABLE: bool = True
+
     """
     跨域解决
     详细解释：https://cloud.tencent.com/developer/article/1886114
