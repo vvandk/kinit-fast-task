@@ -94,7 +94,7 @@ class StorageSettings(Settings):
     OSS_BUCKET: 通过控制台或PutBucket创建的bucket
     OSS_BASE_URL: 填写OSS_ENDPOINT对应访问的URL
     """  # noqa: E501
-    OSS_ENABLE: bool = True  # 是否开启 OSS 文件存储功能
+    OSS_ENABLE: bool = False  # 是否开启 OSS 文件存储功能
     OSS_ACCESS_KEY_ID: str = "accessKeyId"
     OSS_ACCESS_KEY_SECRET: str = "accessKeySecret"
     OSS_ENDPOINT: str = "endpoint"
@@ -219,27 +219,12 @@ class RouterSettings(Settings):
     APPS: list[str]
 
 
-class TaskSettings(Settings):
-    """
-    项目定时任务配置
-    """
-
-    # 是否开启任务引擎
-    TASK_ENABLE: bool
-    # 运行中任务集合
-    SCHEDULER_TASK_JOBS: str = "scheduler_task_jobs"
-    # 任务脚本目录
-    TASK_PAG: str = f"{SystemSettings().PROJECT_NAME}.app.tasks"
-
-
 class GlobalSettings(BaseSettings):
     """
     全局统一配置入口
     """
 
     BASE_PATH: Path = _BASE_PATH
-    # 项目定时任务配置
-    task: TaskSettings = TaskSettings()
     # 项目演示环境配置
     demo: DemoSettings = DemoSettings()
     # 项目认证配置

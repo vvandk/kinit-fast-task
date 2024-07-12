@@ -11,3 +11,5 @@ from kinit_fast_task.app.depends.Paging import Paging, QueryParams
 class PageParams(QueryParams):
     def __init__(self, params: Paging = Depends()):
         super().__init__(params)
+
+        self.v_order = "desc"

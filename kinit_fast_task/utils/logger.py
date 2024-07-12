@@ -35,7 +35,7 @@ class TaskLogger:
             encoding="UTF-8",  # 日志文件的编码格式
             level="DEBUG",  # 设置日志级别为DEBUG，意味着DEBUG及以上级别的日志会被写入此文件
             mode="a",  # 如果文件已经存在，则追加内容
-            filter=lambda record: record["extra"].get("filename") == self._log_filename
+            filter=lambda record: record["extra"].get("filename") == self._log_filename,
         )
 
     def _log(self, level: str, *args: Any, is_verbose: bool = False, depth: int = 0) -> None:
@@ -227,7 +227,7 @@ class LoguruLogger(metaclass=Singleton):
             encoding="UTF-8",  # 日志文件的编码格式
             level="DEBUG",  # 设置日志级别为DEBUG，意味着DEBUG及以上级别的日志会被写入此文件
             mode="a",  # 如果文件已经存在，则追加内容
-            filter=lambda record: record["extra"].get("filename") == self._log_file_path.stem
+            filter=lambda record: record["extra"].get("filename") == self._log_file_path.stem,
         )
         # 自定义格式
         # format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {message}"
@@ -314,12 +314,7 @@ class LoguruLogger(metaclass=Singleton):
         self._log("CRITICAL", *args, depth=depth + 1)
 
     def get_task_log(
-        self,
-        log_filename: str,
-        *,
-        msg: str = "BEGIN",
-        verbose: bool = False,
-        depth: int = 0
+        self, log_filename: str, *, msg: str = "BEGIN", verbose: bool = False, depth: int = 0
     ) -> TaskLogger:
         """
         获取独立任务日志管理器

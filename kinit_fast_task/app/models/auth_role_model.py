@@ -18,5 +18,5 @@ class AuthRoleModel(AbstractORMModel):
     users: Mapped[set["AuthUserModel"]] = relationship(secondary=auth_user_to_role_model, back_populates="roles")
 
     name: Mapped[str] = mapped_column(String(255), index=True, comment="角色名称")
-    role_key: Mapped[str] = mapped_column(String(11), comment="标识")
+    role_key: Mapped[str] = mapped_column(String(11), comment="角色唯一标识")
     is_active: Mapped[bool] = mapped_column(default=True, comment="是否可用")

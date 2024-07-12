@@ -13,7 +13,7 @@ from kinit_fast_task.app.models.auth_user_model import AuthUserModel
 from kinit_fast_task.app.models.auth_role_model import AuthRoleModel
 from kinit_fast_task.db import DBFactory
 from kinit_fast_task.app.cruds.auth_user_crud import AuthUserCRUD
-from kinit_fast_task.app.schemas import auth_user_schema
+from kinit_fast_task.app.schemas import auth_user_schema as user_s
 
 
 class UserService:
@@ -67,7 +67,7 @@ class UserService:
         # 不关联的两种操作，请开启两个事务进行处理，比如第二个失败，不影响第一个 commit
         async with orm_db.begin():
             # 创建一个用户
-            new_user = auth_user_schema.AuthUserCreateSchema(
+            new_user = user_s.AuthUserCreateSchema(
                 name="orm_db_test", telephone="19920240505", is_active=True, age=3, role_ids=[1]
             )
             user = await AuthUserCRUD(orm_db).create_data(new_user, v_return_obj=True)

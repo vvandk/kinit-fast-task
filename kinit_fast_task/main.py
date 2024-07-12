@@ -54,8 +54,8 @@ def create_app():
         serving_str += f"\n\n[dim]Swagger UI Docs:[/dim] [link]{server_address}/docs[/link]"
         serving_str += f"\n\n[dim]Redoc HTML Docs:[/dim] [link]{server_address}/redoc[/link]"
     else:
-        serving_str += f"\n\n[dim]Swagger UI Docs:[/dim] not enabled"
-        serving_str += f"\n\n[dim]Redoc HTML Docs:[/dim] not enabled"
+        serving_str += "\n\n[dim]Swagger UI Docs:[/dim] not enabled"
+        serving_str += "\n\n[dim]Redoc HTML Docs:[/dim] not enabled"
 
     # 踩坑1：rich Panel 使用中文会导致边框对不齐的情况
     panel = Panel(

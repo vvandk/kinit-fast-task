@@ -11,7 +11,7 @@ from sqlalchemy.orm import selectinload
 from kinit_fast_task.db import DBFactory
 from kinit_fast_task.utils.response import RestfulResponse, ResponseSchema, PageResponseSchema
 from kinit_fast_task.app.cruds.auth_user_crud import AuthUserCRUD
-from kinit_fast_task.app.schemas import auth_user_schema, DeleteSchema
+from kinit_fast_task.app.schemas import auth_user_schema as user_s, DeleteSchema
 from kinit_fast_task.app.models.auth_user_model import AuthUserModel
 from .params import PageParams
 from .services import UserService
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/auth/user", tags=["用户管理"])
 
 @router.post("/create", response_model=ResponseSchema[str], summary="创建用户")
 async def create(
-    data: auth_user_schema.AuthUserCreateSchema,
+    data: user_s.AuthUserCreateSchema,
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     """
@@ -44,7 +44,7 @@ async def create(
 @router.post("/update", response_model=ResponseSchema[str], summary="更新用户")
 async def update(
     data_id: int = Body(..., description="用户编号"),
-    data: auth_user_schema.AuthUserUpdateSchema = Body(..., description="更新内容"),
+    data: user_s.AuthUserUpdateSchema = Body(..., description="更新内容"),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     return RestfulResponse.success(await AuthUserCRUD(session).update_data(data_id, data))
@@ -59,15 +59,13 @@ async def delete(
     return RestfulResponse.success("删除成功")
 
 
-@router.get(
-    "/list/query", response_model=PageResponseSchema[list[auth_user_schema.AuthUserOutSchema]], summary="获取用户列表"
-)
+@router.get("/list/query", response_model=PageResponseSchema[list[user_s.AuthUserOutSchema]], summary="获取用户列表")
 async def list_query(
     params: PageParams = Depends(),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     v_options = [selectinload(AuthUserModel.roles)]
-    v_schema = auth_user_schema.AuthUserOutSchema
+    v_schema = user_s.AuthUserOutSchema
     datas = await AuthUserCRUD(session).get_datas(
         **params.dict(), v_options=v_options, v_return_type="dict", v_schema=v_schema
     )
@@ -75,14 +73,14 @@ async def list_query(
     return RestfulResponse.success(data=datas, total=total, page=params.page, limit=params.limit)
 
 
-@router.get("/one/query", response_model=PageResponseSchema[auth_user_schema.AuthUserOutSchema], summary="获取用户信息")
+@router.get("/one/query", response_model=PageResponseSchema[user_s.AuthUserOutSchema], summary="获取用户信息")
 async def one_query(
     data_id: int = Query(..., description="用户编号"),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     v_options = [selectinload(AuthUserModel.roles)]
     data = await AuthUserCRUD(session).get_data(
-        data_id, v_schema=auth_user_schema.AuthUserOutSchema, v_options=v_options, v_return_type="dict"
+        data_id, v_schema=user_s.AuthUserOutSchema, v_options=v_options, v_return_type="dict"
     )
     return RestfulResponse.success(data=data)
 

@@ -119,3 +119,25 @@ def dict_str_vali(value: str | dict):
     elif isinstance(value, dict):
         return json.dumps(value)
     raise ValueError("无效的 Dict 数据或字符串数据")
+
+
+def str_dict_vali(value: str | dict):
+    """
+    dict str 验证 字符串 转 dict类型
+    """
+    if isinstance(value, str):
+        return json.loads(value)
+    elif isinstance(value, dict):
+        return value
+    raise ValueError("无效的 Dict 数据或字符串数据")
+
+
+def str_list_vali(value: str | list):
+    """
+    list str 验证 字符串 转 list 类型
+    """
+    if isinstance(value, str):
+        return json.loads(value)
+    elif isinstance(value, list):
+        return value
+    raise ValueError("无效的 list 数据或 str 数据")

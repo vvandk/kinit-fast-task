@@ -19,7 +19,7 @@ class AuthUserModel(AbstractORMModel):
     roles: Mapped[set["AuthRoleModel"]] = relationship(secondary=auth_user_to_role_model, back_populates="users")
 
     name: Mapped[str] = mapped_column(String(255), index=True, comment="用户名")
-    telephone: Mapped[str] = mapped_column(String(11), comment="手机号")
-    email: Mapped[str | None] = mapped_column(comment="邮箱")
+    telephone: Mapped[str] = mapped_column(String(11), comment="手机号, 要求唯一")
+    email: Mapped[str | None] = mapped_column(comment="邮箱, 要求唯一")
     is_active: Mapped[bool] = mapped_column(default=True, comment="是否可用")
     age: Mapped[int] = mapped_column(comment="年龄")

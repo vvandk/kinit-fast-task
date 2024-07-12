@@ -10,7 +10,8 @@ from fastapi import APIRouter, Depends, Body, Query
 from kinit_fast_task.db import DBFactory
 from kinit_fast_task.utils.response import RestfulResponse, ResponseSchema, PageResponseSchema
 from kinit_fast_task.app.cruds.auth_role_crud import AuthRoleCRUD
-from kinit_fast_task.app.schemas import auth_role_schema, DeleteSchema
+from kinit_fast_task.app.schemas import DeleteSchema
+from kinit_fast_task.app.schemas import auth_role_schema as role_s
 from .params import PageParams
 
 router = APIRouter(prefix="/auth/role", tags=["角色管理"])
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/auth/role", tags=["角色管理"])
 
 @router.post("/create", response_model=ResponseSchema[str], summary="创建角色")
 async def create(
-    data: auth_role_schema.AuthRoleCreateSchema,
+    data: role_s.AuthRoleCreateSchema,
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     """
@@ -35,7 +36,7 @@ async def create(
 
 @router.post("/batch/create", response_model=ResponseSchema[str], summary="批量创建角色")
 async def batch_create(
-    datas: list[auth_role_schema.AuthRoleCreateSchema],
+    datas: list[role_s.AuthRoleCreateSchema],
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     """
@@ -56,7 +57,7 @@ async def batch_create(
 @router.post("/update", response_model=ResponseSchema[str], summary="更新角色")
 async def update(
     data_id: int = Body(..., description="角色编号"),
-    data: auth_role_schema.AuthRoleUpdateSchema = Body(..., description="更新内容"),
+    data: role_s.AuthRoleUpdateSchema = Body(..., description="更新内容"),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
     return RestfulResponse.success(await AuthRoleCRUD(session).update_data(data_id, data))
@@ -73,7 +74,7 @@ async def delete(
 
 @router.get(
     "/list/query",
-    response_model=PageResponseSchema[list[auth_role_schema.AuthRoleSimpleOutSchema]],
+    response_model=PageResponseSchema[list[role_s.AuthRoleSimpleOutSchema]],
     summary="获取角色列表",
 )
 async def list_query(
@@ -90,7 +91,5 @@ async def one_query(
     data_id: int = Query(..., description="角色编号"),
     session: AsyncSession = Depends(DBFactory.get_instance("orm").db_transaction_getter),
 ):
-    data = await AuthRoleCRUD(session).get_data(
-        data_id, v_schema=auth_role_schema.AuthRoleSimpleOutSchema, v_return_type="dict"
-    )
+    data = await AuthRoleCRUD(session).get_data(data_id, v_schema=role_s.AuthRoleSimpleOutSchema, v_return_type="dict")
     return RestfulResponse.success(data=data)

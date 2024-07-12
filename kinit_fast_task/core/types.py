@@ -17,6 +17,8 @@ from kinit_fast_task.utils.validator import (
     datetime_str_vali,
     object_id_str_vali,
     dict_str_vali,
+    str_dict_vali,
+    str_list_vali,
 )
 import datetime
 
@@ -96,4 +98,28 @@ DictStr = Annotated[
     AfterValidator(dict_str_vali),
     PlainSerializer(lambda x: x, return_type=str),
     WithJsonSchema({"type": "string"}, mode="serialization"),
+]
+
+# -----------------------------------------------
+# 实现自定义一个字符串转列表的数据类型
+# 输入类型：str | list
+# 输出类型：list
+# -----------------------------------------------
+StrList = Annotated[
+    str | list,
+    AfterValidator(str_list_vali),
+    PlainSerializer(lambda x: x, return_type=list),
+    WithJsonSchema({"type": "list"}, mode="serialization"),
+]
+
+# -----------------------------------------------
+# 实现自定义一个字符串转字典的数据类型
+# 输入类型：str | dict
+# 输出类型：dict
+# -----------------------------------------------
+StrDict = Annotated[
+    str | dict,
+    AfterValidator(str_dict_vali),
+    PlainSerializer(lambda x: x, return_type=dict),
+    WithJsonSchema({"type": "dict"}, mode="serialization"),
 ]
