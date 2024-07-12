@@ -35,10 +35,6 @@ SQLAlchemy 2.0 中文官方文档：https://docs.sqlalchemy.org.cn/en/20/orm/qui
 
 
 
-欢迎大家补充！！！！！！！！
-
-
-
 
 ## 项目结构
 
@@ -96,6 +92,7 @@ kinit-fast-task
 - [Python3](https://gitee.com/link?target=https%3A%2F%2Fwww.python.org%2Fdownloads%2Fwindows%2F)：熟悉 python3 基础语法
 - [FastAPI](https://gitee.com/link?target=https%3A%2F%2Ffastapi.tiangolo.com%2Fzh%2F) - 熟悉后台接口 Web 框架
 - [SQLAlchemy 2.0](https://gitee.com/link?target=https%3A%2F%2Fdocs.sqlalchemy.org%2Fen%2F20%2Findex.html) - 数据数据库操作
+- [APScheduler](https://apscheduler.readthedocs.io/en/3.x/userguide.html)：定时任务框架
 - [Pydantic 2](https://docs.pydantic.dev/latest/) - 数据验证库
 - [Typer](https://gitee.com/link?target=https%3A%2F%2Ftyper.tiangolo.com%2F) - 熟悉命令行工具的使用
 - [MySQL](https://gitee.com/link?target=https%3A%2F%2Fwww.mysql.com%2F) 和 [MongoDB](https://gitee.com/link?target=https%3A%2F%2Fwww.mongodb.com%2F) 和 [Redis](https://gitee.com/link?target=https%3A%2F%2Fredis.io%2F) - 熟悉数据存储数据库
@@ -166,59 +163,6 @@ poetry install
 
 并根据您的需要自定义配置该项目
 
-```ini
-# -----------------------------------------------
-# system 配置项
-#   SERVER_HOST: 项目监听主机IP，默认开放给本网络所有主机
-#   SERVER_PORT：项目监听端口
-#   DEMO_ENV：否开启演示功能, 为 True 则取消所有POST,DELETE,PUT操作权限
-#   LOG_CONSOLE_OUT：是否将日志打印在控制台
-#   APPS：需要启用的 app router，该顺序也是文档展示顺序
-# -----------------------------------------------
-SERVER_HOST = "0.0.0.0"
-SERVER_PORT = 9000
-DEMO_ENV = False
-LOG_CONSOLE_OUT = True
-APPS = ["bilibili_hot_new", "scheduler_task", "scheduler_task_record", "system_record", "auth_user", "auth_role"]
-
-
-# -----------------------------------------------
-# task 配置项
-#   TASK_ENABLE: 是否启用任务引擎
-# -----------------------------------------------
-TASK_ENABLE = True
-
-
-# -----------------------------------------------
-# db 配置项
-#
-#   ORM 配置项
-#     ORM_DB_ENABLE: 是否选择使用 ORM 数据库
-#     ORM_DB_ECHO: 是否选择输出 ORM 操作日志到控制台
-#     ORM_DATABASE_URL: ORM 数据库连接地址，默认使用 postgresql, 格式："postgresql+asyncpg://账号:密码@地址:端口号/数据库名称"
-#
-#   Redis 配置项
-#     REDIS_DB_ENABLE: 是否选择使用 Redis 数据库
-#     REDIS_DB_URL: Redis 数据库地址地址, 格式："redis://:密码@地址:端口/数据库名称"
-#
-#   MongoDB 配置项
-#     MONGO_DB_ENABLE: 是否选择使用 MongoDB 数据库
-#     MONGO_DB_URL: MongoDB 数据库连接地址, 格式："mongodb://用户名:密码@地址:端口/?authSource=数据库名称"
-# -----------------------------------------------
-# ORM 配置项
-ORM_DB_ENABLE = True
-ORM_DB_ECHO = True
-ORM_DATABASE_URL = "postgresql+asyncpg://user:123456@127.0.0.1:5432/kinit"
-
-# Redis 数据库配置
-REDIS_DB_ENABLE = False
-REDIS_DB_URL = "redis://:123456@127.0.0.1:6379/0"
-
-# MongoDB 数据库配置
-MONGO_DB_ENABLE = True
-MONGO_DB_URL = "mongodb://user:123456@127.0.0.1:27017/?authSource=kinit"
-```
-
 ### 运行启动
 
 ```shell
@@ -273,38 +217,6 @@ ruff check --fix
 - models：auth_user_model
 - schemas：auth_user_schema
 - routers：auth_user
-
-## 待更新项
-
-- [ ] Docker Compose 启动方式
-
-- [x] App 代码生成工具
-
-- [x] 文件管理功能模块，通过工厂模式支持：`本地 static`, `本地 temp`， `阿里云 OSS`，`七牛云`
-
-  1. `本地 static`：需要持久化存储的文件，比如附件，导入文件等
-  2. `本地 temp`：临时存储的文件，比如临时生成的文件，临时导出的文件，可定期删除的文件
-  3. `阿里云 OSS` 与 `七牛云`：需要加速访问的文件，比如图片，用户头像等
-
-  建议 `本地 static`, ` 阿里云 OSS`， `七牛云` 只选择一种进行存储，避免混乱
-
-- [ ] 通用数据导入导出模块
-
-- [ ] 自动化测试：`pytest`
-
-- [ ] ORM 多数据库支持
-
-
-
-欢迎大家补充！！！！！！！！
-
-
-
-**后续计划**
-
-以上待更新项完成后，会推出一个 KINIT 基础标准版，基础标准版中无内置 `APScheduler` 定时任务模块，为一个干净的版本
-
-KINIT 基础标准版完成后，会基于基础标准版开发 KINIT 完整版（存在前后端，微信小程序，定时任务独立模块）
 
 ## 与 KINIT 有什么不同
 
