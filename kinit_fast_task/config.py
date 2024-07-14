@@ -6,7 +6,7 @@
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
-from pydantic import PostgresDsn, RedisDsn, MongoDsn
+from pydantic import PostgresDsn, RedisDsn, MongoDsn, AmqpDsn
 from ipaddress import IPv4Address
 
 # 项目根目录
@@ -143,6 +143,23 @@ class DBSettings(Settings):
     MONGO_DB_URL: MongoDsn = "mongodb://admin:admin@127.0.0.1:27017/?authSource=test"
 
 
+class TaskSettings(Settings):
+    """
+    任务队列配置
+    """
+
+    # 是否开启 Celery 任务队列
+    CELERY_ENABLE: bool = False
+    # 消息队列中间件
+    CELERY_BROKER: RedisDsn | AmqpDsn = "redis://:admin@127.0.0.1:6379/0"
+    # 任务结果存储中间件
+    CELERY_RESULT_BACKEND: RedisDsn = "redis://:admin@127.0.0.1:6379/0"
+    # 任务列表
+    CELERY_TASK_PAG: list[str] = [
+        "kinit_fast_task.app.tasks.example_task"
+    ]
+
+
 class SystemSettings(Settings):
     """
     系统默认配置
@@ -237,6 +254,8 @@ class GlobalSettings(BaseSettings):
     system: SystemSettings = SystemSettings()
     # 系统路由
     router: RouterSettings = RouterSettings()
+    # 任务队列
+    task: TaskSettings = TaskSettings()
 
 
 settings = GlobalSettings()

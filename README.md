@@ -1,37 +1,18 @@
-# KINIT-FAST-TASK
-
-## 以下文档在本项目中提供了重要的基础
-
-FastAPI 官方文档：https://fastapi.tiangolo.com/zh/
-
-Pydantic 官方文档：https://pydantic-docs.helpmanual.io/
-
-Typer 官方文档：https://typer.tiangolo.com/
-
-SQLAlchemy 2.0 async 官方文档：https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html
-
-Alembic 官方文档：https://alembic.sqlalchemy.org/en/latest/
-
-Poetry pyproject.toml 官方文档：https://python-poetry.org/docs/main/pyproject/
-
-OpenAPI 规范官方文档：https://swagger.io/specification/
-
-Ruff 官方文档：https://docs.astral.sh/ruff/
-
-SQLAlchemy 2.0 中文官方文档：https://docs.sqlalchemy.org.cn/en/20/orm/quickstart.html
+<div align="center">
+    <p align="center">
+        <img src="https://k-typora.oss-cn-beijing.aliyuncs.com/kinit/logo.png" height="150" alt="logo"/>
+    </p>
+</div>
 
 
 
-本项目为 KINIT 项目下的 基础定时任务版本，主推定时任务功能的使用：
+## [关于]
 
-1. 定时任务功能的实现依赖于 `APScheduler` 开源项目
-2. 定时任务持久化依赖于 `MongoDB` 数据库
-3. 主要为支持异步定时任务操作，目前数据库均为异步方式操作
+<div align="center"><h3 align="center">Kinit Fast Task 为 FastAPI 项目脚手架</h3></div>
 
-定时任务使用禁忌：
+<div align="center"><h3 align="center">高性能，高效率，易扩展</h3></div>
 
-1. 切勿在异步方法中使用同步操作，会造成阻塞，比如：`time.sleep`, `requests` 等操作
-2. 在使用 `AddTask` 添加任务方式，切勿在任务类中的 `__init__` 中添加非序列化对象，比如 `mongo_db`
+<div align="center"><h3 align="center">长期维护，积极更新！</h3></div>
 
 
 
@@ -92,31 +73,12 @@ kinit-fast-task
 - [Python3](https://gitee.com/link?target=https%3A%2F%2Fwww.python.org%2Fdownloads%2Fwindows%2F)：熟悉 python3 基础语法
 - [FastAPI](https://gitee.com/link?target=https%3A%2F%2Ffastapi.tiangolo.com%2Fzh%2F) - 熟悉后台接口 Web 框架
 - [SQLAlchemy 2.0](https://gitee.com/link?target=https%3A%2F%2Fdocs.sqlalchemy.org%2Fen%2F20%2Findex.html) - 数据数据库操作
-- [APScheduler](https://apscheduler.readthedocs.io/en/3.x/userguide.html)：定时任务框架
+- [Celery](https://docs.celeryq.dev/en/stable/index.html)：任务队列框架
 - [Pydantic 2](https://docs.pydantic.dev/latest/) - 数据验证库
 - [Typer](https://gitee.com/link?target=https%3A%2F%2Ftyper.tiangolo.com%2F) - 熟悉命令行工具的使用
-- [MySQL](https://gitee.com/link?target=https%3A%2F%2Fwww.mysql.com%2F) 和 [MongoDB](https://gitee.com/link?target=https%3A%2F%2Fwww.mongodb.com%2F) 和 [Redis](https://gitee.com/link?target=https%3A%2F%2Fredis.io%2F) - 熟悉数据存储数据库
+- [PostgreSQL](https://www.postgresql.org/) 和 [MongoDB](https://gitee.com/link?target=https%3A%2F%2Fwww.mongodb.com%2F) 和 [Redis](https://gitee.com/link?target=https%3A%2F%2Fredis.io%2F) - 熟悉数据存储数据库
 
 ### 数据库依赖情况
-
-**MongoDB**
-
-在该版本中主要依赖于 MongoDB 数据库
-
-并且在部署时，必须为复制集模式，单节点也可以开启，因为只有开启复制集模式，才能使用 MongoDB 事务功能
-
-部署方式可参考：https://gitee.com/ktianc/docker_env
-
-MongoDB 的主要功能为：
-
-1. 存储系统操作记录
-2. 定时任务持久化存储
-3. 定时任务管理列表
-4. 定时任务执行记录
-
-**Redis**
-
-系统中暂未提供 Redis 数据库使用示例
 
 **PostgreSQL**
 
@@ -126,6 +88,14 @@ MongoDB 的主要功能为：
 
 1. 用户管理
 2. 角色管理
+
+**MongoDB**
+
+用于存储记录型数据，如操作日志，任务日志等
+
+**Redis**
+
+系统中暂未提供 Redis 数据库使用示例
 
 以上数据库均可在 `.env` 文件中选择开启或者关闭，只是关闭后会无法使用对应功能，但不会影响其他未关联功能
 
@@ -223,16 +193,36 @@ ruff check --fix
 1. 新增了包管理工具： `poetry`
 2. 新增了代码检查格式化工具：`ruff`
 3. 新增了项目配置管理工具：`pydantic-settings`
-4. 内置了定时任务框架：`APScheduler`
+4. 内置了任务队列框架：`Celery`
 5. 项目结构重新调整
 6. 整体类型提示优化
 7. 重新封装数据库管理模块
-8. `orm` 与 `MongoDB` 操作优化，`MongoDB` 操作支持事务处理
+8. `orm` 与 `MongoDB` 操作优化
 9. 对生成接口文档更加友好
 10. 日志模块优化
 11. 响应数据模块优化
 12. 新增 `schema` 基类，在基类中实现 `hidden=True` 的字段不会在接口文档中出现
 13. 将默认使用的 `Mysql` 改为了 `PostgreSQL`
+
+## 以下文档在本项目中提供了重要的基础
+
+FastAPI 官方文档：https://fastapi.tiangolo.com/zh/
+
+Pydantic 官方文档：https://pydantic-docs.helpmanual.io/
+
+Typer 官方文档：https://typer.tiangolo.com/
+
+SQLAlchemy 2.0 async 官方文档：https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html
+
+Alembic 官方文档：https://alembic.sqlalchemy.org/en/latest/
+
+Poetry pyproject.toml 官方文档：https://python-poetry.org/docs/main/pyproject/
+
+OpenAPI 规范官方文档：https://swagger.io/specification/
+
+Ruff 官方文档：https://docs.astral.sh/ruff/
+
+SQLAlchemy 2.0 中文官方文档：https://docs.sqlalchemy.org.cn/en/20/orm/quickstart.html
 
 ## 其他
 
