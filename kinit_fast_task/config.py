@@ -153,10 +153,10 @@ class TaskSettings(Settings):
     # 消息队列中间件
     CELERY_BROKER: RedisDsn | AmqpDsn = "redis://:admin@127.0.0.1:6379/0"
     # 任务结果存储中间件
-    CELERY_RESULT_BACKEND: RedisDsn = "redis://:admin@127.0.0.1:6379/0"
-    # 任务列表
+    CELERY_RESULT_BACKEND: RedisDsn | PostgresDsn = "redis://:admin@127.0.0.1:6379/0"
+    # 加载的任务列表
     CELERY_TASK_PAG: list[str] = [
-        "kinit_fast_task.app.tasks.example_task"
+        "kinit_fast_task.app.tasks"
     ]
 
 

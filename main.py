@@ -30,7 +30,6 @@ def run(reload: bool = typer.Option(default=False, help="是否自动重载")):
     # 在 pycharm 中使用自动重载是有 bug 的，很慢，截至 2024-04-30 还未修复，在使用 pycharm 开发时，不推荐使用 reload 功能
 
     :param reload: 是否自动重启
-    :return:
     """  # noqa E501
     import uvicorn
 
@@ -56,8 +55,6 @@ def migrate():
     将模型迁移到数据库，更新数据库表结构
 
     命令示例：python main.py migrate
-
-    :return:
     """
     from kinit_fast_task.utils.tools import exec_shell_command
 
@@ -65,6 +62,18 @@ def migrate():
     exec_shell_command("alembic revision --autogenerate", "生成迁移文件失败")
     exec_shell_command("alembic upgrade head", "迁移至数据库失败")
     log.info("数据库表迁移完成")
+
+
+@shell_app.command()
+def celery():
+    """
+    启动 celery
+
+    命令示例：python main.py celery
+    """
+    import os
+
+    os.system("celery -A kinit_fast_task.celery_worker:celery_app worker -l info --pool=solo")
 
 
 @shell_app.command()
