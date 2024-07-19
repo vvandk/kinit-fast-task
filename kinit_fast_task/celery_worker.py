@@ -55,6 +55,12 @@ class CeleryApp(metaclass=Singleton):
             ['json', 'pickle']：表示 Worker 同时接受 JSON 和 Pickle 格式的消息
         timezone: 指定时区
         enable_utc: 是否启用 UTC 时间
+        broker_connection_retry_on_startup: 在启动Celery如果初次连接失败, 是否需要尝试重新连接到代理
+            用于移除 you should set broker_connection_retry_on_startup to True. 警告
+        task_track_started: 如果设置为 True，当任务被 worker 执行时，任务将报告其状态为 "started"。
+            默认值为 False，因为通常情况下，不会报告这种级别的详细信息。
+            任务的状态通常为 "pending"（等待中）、"finished"（已完成）或 "waiting to be retried"（等待重试）。
+            对于长时间运行的任务，报告当前正在运行的任务状态可能是有用的。
         """
         self._app.conf.update(
             broker_url=settings.task.CELERY_BROKER.unicode_string(),
@@ -63,7 +69,9 @@ class CeleryApp(metaclass=Singleton):
             result_serializer='json',
             accept_content=['json'],
             timezone='Asia/Shanghai',
-            enable_utc=False
+            enable_utc=False,
+            broker_connection_retry_on_startup=True,
+            task_track_started=True
         )
 
     def main(self):
